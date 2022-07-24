@@ -1,0 +1,48 @@
+.admin-style .cartrulesWrapper table{
+    margin-bottom: 30px;
+}
+
+.admin-style .cartrulesWrapper th{
+    border-bottom: 1px solid silver;
+}
+
+.admin-style .cartrulesWrapper tbody tr{
+    border-bottom: 1px solid silver;
+}
+
+.admin-style .cartrulesWrapper tbody tr:last-child{
+    border-bottom: none;
+}
+
+.admin-style .cartrules-condition input[type="number"]{
+    max-width: 100px
+}
+
+.admin-style .cartrules-products-wrapper ol{
+    margin-left: 0;
+    margin-bottom: 0;
+    padding-left: 20px;
+}
+
+.admin-style .cartrules-products-wrapper li{
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+.admin-style .cartrules-products-wrapper .cartrule-amount{
+    width: 50px;
+}
+
+.admin-style .cartrules-condition{
+    margin-bottom: 20px;
+}
+
+.admin-style .cartrules-empty{
+    text-align: center;
+    padding: 40px 20px !important;
+    font-weight: bold;
+}
+
+.admin-style .cartrulesWrapper tbody{
+    border-bottom: 1px solid silver;
+}

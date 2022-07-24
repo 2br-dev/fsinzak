@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <defaultValues>
+        <name multilanguage="true">Fsinzak.ru</name>
+        <description multilanguage="true">Кастомная логика для интернет магазина fsinzak.ru</description>
+        <version>4.0.0</version>
+        <author>2Br</author>
+    </defaultValues>
+</config>

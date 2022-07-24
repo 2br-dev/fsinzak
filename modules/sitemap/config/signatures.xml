@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<signatures>
+  <file>
+    <path>config/changelog.txt</path>
+    <sign>c0e7112dce5a3bc905d0497a673279e56acc746f</sign>
+  </file>
+  <file>
+    <path>config/file.inc.php</path>
+    <sign>d2e5ed506d557805bf9127a0d391744a2fe80cc1</sign>
+  </file>
+  <file>
+    <path>config/handlers.inc.php</path>
+    <sign>bda2e4318b65229cd5bbe9b2f9952e45f98d41ac</sign>
+  </file>
+  <file>
+    <path>config/module.xml</path>
+    <sign>ee78f633188538b57e4ff69e74a58335746ebfb9</sign>
+  </file>
+  <file>
+    <path>controller/front/sitemap.inc.php</path>
+    <sign>c91f47660f0ea9e6dee3782160e386017b16f9df</sign>
+  </file>
+  <file>
+    <path>model/api.inc.php</path>
+    <sign>9ada3f8de6c79097593b438ac99056c9b22f7e40</sign>
+  </file>
+  <file>
+    <path>view/admin/sitemap_url.tpl</path>
+    <sign>dde02c41fb515b201239a9a689c5b871d0741828</sign>
+  </file>
+  <masterSign>b2a2a4920ffe1e2d4cf25f848248c0bddc73f07b53521502e1ebe60deb6712d8b84829f78fee7851c16f32be9849e2d2cc9c2ce090b7fbb0e695a34fd3663bdb779c42a6710a95fc57ccd8ae478ba50762b6d1d368859c973cd979e566abaf6802c797341ee08fc719b5a9b1036f7c0dfcadffa41c3c762bcba4d3dc607efb85</masterSign>
+</signatures>
