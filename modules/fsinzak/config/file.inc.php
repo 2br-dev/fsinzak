@@ -2,6 +2,7 @@
 
 namespace fsinzak\Config;
 
+use RS\Module\AbstractModel\TreeList\AbstractTreeListIterator;
 use RS\Orm\ConfigObject;
 use RS\Orm\Type;
 use RS\Orm\Type\Integer;
@@ -40,7 +41,18 @@ class File extends ConfigObject
                 'status_to_send_pdf' => new Type\Integer([
                     'description' => t('статус заказа для отправки pdf'),
                     'list' => [['\Shop\Model\Userstatusapi', 'staticSelectList']]
-                ])
+                ]),
+            t('Главная страница'),
+                'dirs_to_main_page' => new Type\ArrayList([
+                    'runtime' => false,
+                    'description' => t('Список категорий на главную страницу'),
+                    'hint' => t('Какие категории выводить на главной странице'),
+                    'tree' => [['\Catalog\Model\DirApi', 'staticTreeList']],
+                    'attr' => [[
+                        AbstractTreeListIterator::ATTRIBUTE_MULTIPLE => true,
+                    ]],
+                    'visible' => true
+                ]),
         ]);
     }
 
@@ -121,5 +133,10 @@ class File extends ConfigObject
             return $limit;
         }
         return false;
+    }
+
+    public function getDirsToMainPage()
+    {
+        return $this['dirs_to_main_page'];
     }
 }

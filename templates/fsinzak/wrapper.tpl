@@ -7,7 +7,7 @@
                 </a>
                 <a href="/" class="logo"></a>
                 <div class="nav-wrapper hide-l-down">
-                    <a href="" class="super-btn">
+                    <a class="super-btn">
                         <i class="mdi mdi-menu"></i>
                         <span>Каталог</span>
                     </a>
@@ -50,7 +50,6 @@
         <span class="logo"></span>
         <span class="region">
             {moduleinsert name="\Affiliate\Controller\Block\SelectAffiliate" indexTemplate="%affiliate%/blocks/selectaffiliate/select_affiliate_sidenav.tpl"}
-
 		</span>
         <span class="sidebar-close">
 			<i class="mdi mdi-close"></i>

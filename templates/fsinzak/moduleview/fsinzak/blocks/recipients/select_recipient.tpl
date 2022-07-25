@@ -4,7 +4,7 @@
             Получатель:
             {if count($recipients)}
                 {if !$current_recipient}
-                    <a class="selected-recipient" href="">Выбрать</a>
+                    <a class="selected-recipient">Выбрать</a>
                 {else}
                     <a class="selected-recipient">{$current_recipient->getFio(false)}</a>
                 {/if}

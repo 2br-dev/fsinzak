@@ -8,7 +8,7 @@
     <form id="recipient-edit-form">
         <div class="row">
             <input type="hidden" name="id" value="{$recipient['id']}">
-            <input type="hidden" name="referer" value="/my/recipients/">
+            <input type="hidden" name="referer" value="{$referer}">
             <div class="col l6 m12">
                 <div class="input-field">
                     <input type="text" name="surname" placeholder="Фамилия" value="{$recipient['surname']}">
@@ -43,7 +43,7 @@
 {block "footer"}
     <div class="modal-footer">
         <a
-           data-referer = "/my/recipients/"
+           data-referer = "{$referer}"
            data-url="{$router->getUrl('fsinzak-front-myrecipients',['Act' => 'edit'])}"
            class="btn recipient-edit"
         >Сохранить</a>

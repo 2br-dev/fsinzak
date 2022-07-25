@@ -55,12 +55,10 @@ function initDatepicker() {
 
 function editRecipient(e)
 {
-    console.log('editRecipient');
     if(e !== 'undefined'){
         e.preventDefault();
     }
     let form = $('#recipient-edit-form');
-    let referer = $(this).data('referer');
     $.ajax({
         url: $(this).data('url'),
         type: 'POST',
@@ -81,8 +79,7 @@ function editRecipient(e)
                     M.toast({html: '<p>Не заполенено поле Дата рождения</p>', classes: 'toast-error'});
                 }
             }else {
-                // console.log(referer);
-                window.location.href = referer;
+                window.location.href = res.referer;
             }
         },
         error: function (err) {
@@ -248,6 +245,5 @@ function fillDefaultDate(context){
     if(hiddenInput){
         defaultDate = new Date(hiddenInput.value*1000);
     }
-    console.log(defaultDate);
     return defaultDate;
 }

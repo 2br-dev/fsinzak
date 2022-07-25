@@ -129,6 +129,7 @@
             $('body').on('click', '.open-place-selector', openPlaceSelector);
             $('body').on('keyup', 'textarea', updateTextarea);
             $(window).on('scroll', setupHeader);
+            $('body').on('click', '.sidebar-close', closeSideNav);
             $('body').on('mouseenter', '.name-selector-wrapper', function (e) {
                 $(e.currentTarget).addClass('hover');
             });
@@ -143,6 +144,10 @@
             // var modal = M.Modal.init(document.querySelectorAll('.modal'));
             // select = M.FormSelect.init(document.querySelectorAll('select'));
         });
+
+        function closeSideNav() {
+            sidenav[0].close();
+        }
 
         function setupHeader() {
             var st = $('html, body').scrollTop();

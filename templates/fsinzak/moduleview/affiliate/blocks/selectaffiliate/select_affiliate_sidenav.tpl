@@ -1,7 +1,9 @@
 {* Отображает текущий филиал в шапке. Позволяет открыть диалоговое окно выбора филиала. *}
 {addjs file="%affiliate%/rscomponent/affiliate.js"}
 {$parent_affiliate = $current_affiliate->getParentAffiliate()}
-<span>{$parent_affiliate['title']}, {$current_affiliate['title']|default:"{t}Выбрать учреждение{/t}"}</span>
+<a class="rs-in-dialog" data-href="{$router->getUrl('affiliate-front-affiliates', ['referer' => $referrer])}" {if $current_affiliate.id}{$current_affiliate->getDebugAttributes()}{/if}>
+    <span>{$parent_affiliate['title']}, {$current_affiliate['title']|default:"{t}Выбрать учреждение{/t}"}</span>
+</a>
 
 {*<a class="rs-in-dialog geo hide-l-down"*}
 {*   data-href="{$router->getUrl('affiliate-front-affiliates', ['referer' => $referrer])}"*}

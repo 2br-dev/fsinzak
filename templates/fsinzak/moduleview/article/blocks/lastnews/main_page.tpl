@@ -2,8 +2,9 @@
     <div class="container">
         <div class="row">
             <div class="news-wrapper">
-                {foreach $news as $item}
-                    <div class="news-entry-wrapper">
+                {foreach from=$news item=$item name=news}
+
+                    <div class="news-entry-wrapper hoverable {if count($news) == 1}full{/if}{if count($news) == 2 && $smarty.foreach.news.index == 1}half{/if}">
                         <div class="news-entry">
                             <div class="data-wrapper">
                                 <div class="date">{$item.dateof|dateformat:"%d %v %Y"}</div>

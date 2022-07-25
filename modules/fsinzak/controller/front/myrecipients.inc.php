@@ -28,9 +28,11 @@ class MyRecipients extends Front
         $recipient_id = $this->url->request('recipient', TYPE_INTEGER, 0);
         $recipient = new \Fsinzak\Model\Orm\Recipients($recipient_id);
         $birthday_timestamp = strtotime($recipient['birthday']);
+        $referer = urlencode($_SERVER['HTTP_REFERER']);
         $this->view->assign([
             'recipient' => $recipient,
-            'birthday_timestamp' => $birthday_timestamp
+            'birthday_timestamp' => $birthday_timestamp,
+            'referer' => $referer
         ]);
         if($this->url->isPost()){
             $error = '';
@@ -38,6 +40,7 @@ class MyRecipients extends Front
             $name = $this->request('name', TYPE_STRING, '');
             $midname = $this->request('midname', TYPE_STRING, '');
             $birthday_timestamp = $this->request('birthday_timestamp', TYPE_INTEGER);
+            $referer = $this->request('referer', TYPE_STRING, \RS\Site\Manager::getSite()->getRootUrl());
             if(trim($surname) == ''){
                 $error = 'surname';
             }
@@ -63,6 +66,7 @@ class MyRecipients extends Front
                 $this->result->setSuccess(false);
             }
             $this->result->addSection('error', $error);
+            $this->result->addSection('referer', urldecode($referer));
             return $this->result;
         }
         return $this->result->setTemplate('%fsinzak%/recipient-edit.tpl');

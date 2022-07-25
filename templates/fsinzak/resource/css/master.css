@@ -24627,10 +24627,6 @@ header .nav-bottom ul.nav-br a {
     transform: none;
     opacity: 1; }
 
-@media (max-width: 1200px) {
-    footer {
-        margin-bottom: 60px; } }
-
 footer .footer-header {
     font-weight: 600;
     text-transform: uppercase;

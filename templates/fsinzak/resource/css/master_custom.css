@@ -459,3 +459,8 @@ ul.dropdown-content.select-dropdown {
 .sidenav > li.sidebar-header .region span {
     font-size: 14px;
 }
+@media (max-width: 800px) {
+    footer {
+        margin-bottom: 60px;
+    }
+}
