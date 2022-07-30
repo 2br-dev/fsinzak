@@ -6,104 +6,106 @@ new class SearchLine extends RsJsCore.classes.component
 {
     onDocumentReady()
     {
-        let searchLine = document.querySelector('.rs-search-line');
+        let searchLines = document.querySelectorAll('.rs-search-line');
 
-        let input = searchLine && searchLine.querySelector('.rs-autocomplete');
-        let resultWrapper = searchLine && searchLine.querySelector('.rs-autocomplete-result');
-        let clearButton = searchLine && searchLine.querySelector('.rs-autocomplete-clear');
-        let cancelController;
+        searchLines.forEach((searchLine) => {
+            let input = searchLine && searchLine.querySelector('.rs-autocomplete');
+            let resultWrapper = searchLine && searchLine.querySelector('.rs-autocomplete-result');
+            let clearButton = searchLine && searchLine.querySelector('.rs-autocomplete-clear');
+            let cancelController;
 
-        if (input && input.dataset.sourceUrl) {
-            if (clearButton) {
-                input.addEventListener('keyup', (event) => {
-                    clearButton.classList.toggle('d-none', event.target.value === '');
-                });
+            if (input && input.dataset.sourceUrl) {
+                if (clearButton) {
+                    input.addEventListener('keyup', (event) => {
+                        clearButton.classList.toggle('d-none', event.target.value === '');
+                    });
 
-                clearButton.addEventListener('click', (event) => {
-                    input.value = '';
-                    input.dispatchEvent(new Event('keyup'));
-                    input.dispatchEvent(new Event('keydown'));
-                });
-            }
-
-            let onEnter = (event) => {
-                if (event.key === 'Enter') {
-                    event.target.closest('form').submit();
+                    clearButton.addEventListener('click', (event) => {
+                        input.value = '';
+                        input.dispatchEvent(new Event('keyup'));
+                        input.dispatchEvent(new Event('keydown'));
+                    });
                 }
-            };
 
-            this.autoComplete = new autoComplete({
-                selector: () => input,
-                searchEngine: () => true,
-                wrapper:false,
-                data: {
-                    src: async () => {
-                        if (cancelController) cancelController.abort();
-                        cancelController = new AbortController();
+                let onEnter = (event) => {
+                    if (event.key === 'Enter') {
+                        event.target.closest('form').submit();
+                    }
+                };
 
-                        let data = await this.utils.fetchJSON(input.dataset.sourceUrl + '&' + new URLSearchParams({
-                            term:this.autoComplete.input.value
-                        }), {
-                            signal: cancelController.signal
-                        });
+                this.autoComplete = new autoComplete({
+                    selector: () => input,
+                    searchEngine: () => true,
+                    wrapper:false,
+                    data: {
+                        src: async () => {
+                            if (cancelController) cancelController.abort();
+                            cancelController = new AbortController();
 
-                        return data ? data : [];
+                            let data = await this.utils.fetchJSON(input.dataset.sourceUrl + '&' + new URLSearchParams({
+                                term:this.autoComplete.input.value
+                            }), {
+                                signal: cancelController.signal
+                            });
+
+                            return data ? data : [];
+                        },
+                        keys:['value']
                     },
-                    keys:['value']
-                },
-                resultsList: {
-                    class: '',
-                    maxResults:20,
-                    destination:() => resultWrapper,
-                    position:'beforeend',
-                    noResults: true,
-                    element: (list, data) => {
-                        if (!data.results.length) {
-                            const message = document.createElement("li");
-                            message.setAttribute("class", "no_result");
-                            message.innerHTML = lang.t('Ничего не найдено по вашему запросу');
-                            list.appendChild(message);
-                        }
+                    resultsList: {
+                        class: '',
+                        maxResults:20,
+                        destination:() => resultWrapper,
+                        position:'beforeend',
+                        noResults: true,
+                        element: (list, data) => {
+                            if (!data.results.length) {
+                                const message = document.createElement("li");
+                                message.setAttribute("class", "no_result");
+                                message.innerHTML = lang.t('Ничего не найдено по вашему запросу');
+                                list.appendChild(message);
+                            }
+                        },
                     },
-                },
-                resultItem: {
-                    element: (element, data) => {
-                        let tpl;
-                        if (data.value.type === 'product') {
-                            tpl = `<a class="dropdown-item" href="${data.value.url}">
+                    resultItem: {
+                        element: (element, data) => {
+                            let tpl;
+                            if (data.value.type === 'product') {
+                                tpl = `<a class="dropdown-item" href="${data.value.url}">
                                         <div class="col">${data.value.label}</div>
                                         <div class="ms-4 text-nowrap">${data.value.price}</div>
                                     </a>`;
-                        }
-                        else {
-                            let types = {
-                                'category': lang.t('Категория: '),
-                                'brand': lang.t('Бренд: ')
-                            };
-                            let typeAsString = types[data.value.type] ? types[data.value.type] : '';
-                            tpl = `<a class="dropdown-item" href="${data.value.url}">
+                            }
+                            else {
+                                let types = {
+                                    'category': lang.t('Категория: '),
+                                    'brand': lang.t('Бренд: ')
+                                };
+                                let typeAsString = types[data.value.type] ? types[data.value.type] : '';
+                                tpl = `<a class="dropdown-item" href="${data.value.url}">
                                         <div class="col">${typeAsString}${data.value.label}</div>
                                     </a>`;
-                        }
+                            }
 
-                        element.innerHTML = tpl;
+                            element.innerHTML = tpl;
+                        },
+                        selected: 'selected'
                     },
-                    selected: 'selected'
-                },
-                events: {
-                    input: {
-                        selection: (event) => {
-                            if (event.detail.selection.value) {
-                                input.removeEventListener('keyup', onEnter);
-                                location.href = event.detail.selection.value.url;
+                    events: {
+                        input: {
+                            selection: (event) => {
+                                if (event.detail.selection.value) {
+                                    input.removeEventListener('keyup', onEnter);
+                                    location.href = event.detail.selection.value.url;
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
 
-            input.addEventListener('keyup', onEnter);
+                input.addEventListener('keyup', onEnter);
 
-        }
+            }
+        });
     }
 };

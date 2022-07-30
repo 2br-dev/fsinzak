@@ -1,0 +1,110 @@
+.mailsend-filter {
+    border:1px solid #ddd;
+    padding:5px 20px 5px 5px;
+    margin-top:5px;
+    background: white;
+    position:relative;
+}
+
+.mailsend-filter-close {
+    position:absolute;
+    right:0;
+    top:0;
+    padding:5px;
+}
+
+.mailsend-filter-close:hover {
+    background: #ddd;
+    color:white;
+}
+
+.mailsend-filter .otable .otitle {
+    padding-left:0;
+}
+
+.mailsend-vars {
+    background:#fff9ba; 
+    border-left:3px solid #f97b00; 
+    padding:1px 20px; 
+    margin-top:10px;
+}
+
+.mailsend-source-settings,
+.mailsend-content-settings {
+    display:none;
+    border:1px solid #ddd;
+    padding:5px 20px 5px 5px;
+    margin-top:5px;
+    background: white;
+    position:relative;
+    margin-bottom:15px;
+}
+
+.open .mailsend-content-settings {
+    display:block;
+}
+
+.mailsend-attached-files,
+.mailsend-files-container {
+    padding:0;
+    list-style:none;
+}
+
+.mailsender-select-sample {
+    float:right;
+    line-height:22px;
+    text-decoration:underline;
+}
+
+.admin-style .ui-dialog.selectSampleDialog {
+    z-index:1003;
+}
+
+.mailsender-samples {
+    padding:0;
+    list-style:none;
+}
+
+.mailsender-samples li {
+    float:left;
+    padding:10px;
+    border:1px solid transparent;
+    cursor:pointer;
+    width:280px;
+    margin-right:10px;
+    margin-bottom:10px;
+}
+
+.mailsender-samples li:hover {
+    border-color: #aaa;
+    opacity:0.9;
+}
+
+.mailsender-samples li img {
+    max-width:100%;
+    max-height:100%;
+}
+
+.mailsender-sample-image {
+    height:373px;
+    width:280px;
+    text-align:center;
+    vertical-align:top;
+}
+
+.mailsender-sample-link {
+    display:block;
+    text-align:center;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-top:7px;
+}
+
+.mailsend-content-edit {
+    display:inline-block;
+    background:url(../../../../resource/img/adminstyle/options.png) no-repeat;
+    width:17px;
+    height:17px;
+    vertical-align:middle;
+}

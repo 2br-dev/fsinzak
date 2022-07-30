@@ -1,0 +1,12 @@
+.unsubscribeBlock {
+    padding:200px 0;
+    text-align:center;
+
+    color: #585858;
+    font-size: 20px;
+    text-shadow: 0 1px 0 white;
+}
+
+.unsubscribeImage {
+    margin-right:10px;
+}

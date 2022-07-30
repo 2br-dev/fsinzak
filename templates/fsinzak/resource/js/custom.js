@@ -38,4 +38,5 @@ new class Anton extends RsJsCore.classes.component
     onContentReady(event) {
         this.initDatepicker(event);
     }
+
 };

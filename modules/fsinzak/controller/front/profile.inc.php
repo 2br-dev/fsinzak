@@ -73,7 +73,7 @@ class Profile extends AuthorizedFront
             if ($user->save($user['id'])) {
                 $_SESSION['user_profile_result'] = t('Изменения сохранены');
                 AppAuth::setCurrentUser($user); //Обновляем в пользователя в текущей сессии
-                $this->refreshPage();
+                return $this->result->setRedirect($this->router->getUrl('shop-front-checkout', ['v'=>1]));
             }
 
         }

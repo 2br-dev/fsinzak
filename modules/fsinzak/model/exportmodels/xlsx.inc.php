@@ -228,7 +228,8 @@ class XLSX extends AbstractExportModel {
                 $this->now_row++;
             }
         }
-//
+        $sheet->getStyle('A11:F'.$this->now_row)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
 //        return [
 //            'total_cnt' => $this->total_cnt,
 //            'total_cost' => $this->total_cost,
@@ -237,65 +238,6 @@ class XLSX extends AbstractExportModel {
 //            'total_comission_im' => $this->total_comission_im,
 //        ];
     }
-//
-//    /**
-//     * Добавляет в файл XLSX строки с заказами для ИТОГО
-//     *
-//     * @param Worksheet $sheet - текущий активный лист
-//     * @param array $info - информация по заказам
-//     * @param array $users_info - информация по пользователям
-//     *
-//     * @throws \PhpOffice\PhpSpreadsheet\Exception
-//     * @throws \RS\Db\Exception
-//     * @throws \RS\Orm\Exception
-//     */
-//    private function addSum($sheet, $info, $users_info)
-//    {
-//        $sheet->mergeCellsByColumnAndRow(1, $this->now_row, 2, $this->now_row);
-//        $sheet->setCellValueByColumnAndRow(1, $this->now_row,  t('ИТОГО'))
-//            ->setCellValueByColumnAndRow(3, $this->now_row, $info['total_cnt'])
-//            ->setCellValueByColumnAndRow(4, $this->now_row, \RS\Helper\CustomView::cost($info['total_cost'], 'р.'))
-//            ->setCellValueByColumnAndRow(5, $this->now_row, \RS\Helper\CustomView::cost($info['total_comission'], 'р.'))
-//            ->setCellValueByColumnAndRow(6, $this->now_row, \RS\Helper\CustomView::cost($info['total_comission_paysystem'], 'р.'))
-//            ->setCellValueByColumnAndRow(7, $this->now_row, \RS\Helper\CustomView::cost($info['total_comission_im'], 'р.'));
-//
-//        $this->setColumnAlignment($sheet, 1, 'left');
-//        $this->setColumnAlignment($sheet, 2, 'left');
-//        $this->setColumnAlignment($sheet, 3, 'right');
-//        $this->setColumnAlignment($sheet, 4, 'right');
-//        $this->setColumnAlignment($sheet, 5, 'right');
-//        $this->setColumnAlignment($sheet, 6, 'right');
-//        $this->setColumnAlignment($sheet, 7, 'right');
-//
-//        $field = $sheet->getStyleByColumnAndRow(3, $this->now_row);
-//        $field->getFont()->setBold(true);
-//        $field->getFill()
-//            ->setFillType(Fill::FILL_SOLID)
-//            ->getStartColor()->setARGB('FFC0C0C0');
-//        $field = $sheet->getStyleByColumnAndRow(4, $this->now_row);
-//        $field->getFont()->setBold(true);
-//        $field->getFill()
-//            ->setFillType(Fill::FILL_SOLID)
-//            ->getStartColor()->setARGB('FFC0C0C0');
-//
-//        $sheet->getRowDimension($this->now_row)->setRowHeight(20);
-//
-//        $this->now_row++;
-//
-//        $sheet->getRowDimension($this->now_row)->setRowHeight(20);
-//        $this->setColumnAlignment($sheet, 1);
-//        $sheet->mergeCellsByColumnAndRow(1, $this->now_row, 7, $this->now_row);
-//        $sheet->setCellValueByColumnAndRow(1, $this->now_row,  t('Зарегистрировано пользователей %0', [$users_info['register']]));
-//
-//        $this->now_row++;
-//
-//        $sheet->getRowDimension($this->now_row)->setRowHeight(20);
-//        $this->setColumnAlignment($sheet, 1);
-//        $sheet->mergeCellsByColumnAndRow(1, $this->now_row, 7, $this->now_row);
-//        $sheet->setCellValueByColumnAndRow(1, $this->now_row,  t('Заказов без регистрации %0', [$users_info['no_register']]));
-//
-//        $this->now_row++;
-//    }
 
     /**
      * Получает ссылку на файл с данными детализации
@@ -319,10 +261,6 @@ class XLSX extends AbstractExportModel {
         $this->addOrderItems($sheet, $order);
 
 //        $total_info = $this->addOrders($sheet, $info, $this->detalization);
-
-        //Смотрим данные по пользователям
-//        $users_info = $order_api->getUsersExportInfo($from, $to);
-//        $this->addSum($sheet, $total_info, $users_info);
 
         //Стиль границ
         $styleArray = [

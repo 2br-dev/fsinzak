@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <defaultValues>
+        <name multilanguage="true">Рассылки, триггерные рассылки</name>
+        <description multilanguage="true">Позволяет организовывать рассылки и триггерные рассылки</description>
+        <version>6.0.1</version>
+        <author>ReadyScript lab.</author>
+        <session_send_limit>30</session_send_limit>
+        <sleep_time_in_seconds>0</sleep_time_in_seconds>
+        <trigger_interval>10</trigger_interval>
+        <css_to_inline>1</css_to_inline>
+    </defaultValues>
+</config>

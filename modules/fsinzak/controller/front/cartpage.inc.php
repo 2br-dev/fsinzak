@@ -80,7 +80,7 @@ class CartPage extends Front
                 }
                 foreach ($limits as $limit) {
                     if($limit['type'] == 'limit_sum'){
-                        if($cart_total_sum + ($product->getCost() * $amount) > $limit['value']){
+                        if($cart_total_sum + (intval($product->getCost(null, null, false)) * $amount) > $limit['value']){
                             $cart_error[] = 'limit_sum';
                         }
                     }

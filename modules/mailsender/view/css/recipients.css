@@ -1,0 +1,13 @@
+body {
+    margin:20px;
+}
+
+.mailsend-recipients {
+    width:100%;
+    border-collapse:collapse;
+}
+
+.mailsend-recipients td {
+    border:1px solid #000;
+    padding:3px;
+}

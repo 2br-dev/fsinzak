@@ -12,7 +12,8 @@ class ShopOrder extends BehaviorAbstract
     {
         $order = $this->owner;
         $export_api = new \Fsinzak\Model\ExportApi(new XLSX());
-        $export_api->getExportFile($order);
+        $file = $export_api->getExportFile($order);
+
     }
 
     /**
