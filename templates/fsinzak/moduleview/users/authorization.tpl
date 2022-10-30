@@ -15,20 +15,20 @@
             <div class="row">
                 <div class="col s12">
                     <div class="input-field">
-                        <input type="text" placeholder="{$login_placeholder}" name="login"
+                        <input type="text" placeholder="E-mail" name="login"
                                value="{$data.login|default:$Setup.DEFAULT_DEMO_LOGIN}"
                                class="form-control {if !empty($error)}is-invalid{/if}"
                                autocomplete="off"
                                id="input-auth1"
                         >
-                        <label for="input-auth1" class="form-label">{$login_placeholder}</label>
+                        <label for="input-auth1" class="form-label">E-mail</label>
                     </div>
                 </div>
                 <div class="col s12">
                     <div class="input-field">
                         <input type="password" name="pass" value="{$Setup.DEFAULT_DEMO_PASS}"
                                class="form-control {if !empty($error)}is-invalid{/if}"
-                               autocomplete="off" id="input-auth2">
+                               autocomplete="off" id="input-auth2" placeholder="Пароль">
                         <label for="input-auth2" class="form-label">Пароль</label>
                     </div>
                 </div>

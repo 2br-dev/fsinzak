@@ -1,13 +1,15 @@
 <div class="divider"></div>
 <div class="basket-summary checkout-total">
-    <div class="total">
-        <div class="total-sign">Комиссия <br> за оформление заказа</div>
-        <div class="total-sum">{$commission}₽</div>
-    </div>
-    <div class="total">
-        <div class="total-sign">Товаров <br> на сумму</div>
-        <div class="total-sum">{$cart_data.total_without_delivery_unformatted}₽</div>
-    </div>
+    {if $commission > 0}
+        <div class="total">
+            <div class="total-sign">Комиссия <br> за оформление заказа</div>
+            <div class="total-sum">{$commission}₽</div>
+        </div>
+        <div class="total">
+            <div class="total-sign">Товаров <br> на сумму</div>
+            <div class="total-sum">{$cart_data.total_without_delivery_unformatted}₽</div>
+        </div>
+    {/if}
     <div class="total">
         <div class="total-sign">Итого <br> к оплате</div>
         <div class="total-sum">{$total_sum}₽</div>

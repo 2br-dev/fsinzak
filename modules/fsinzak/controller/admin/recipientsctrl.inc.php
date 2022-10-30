@@ -24,7 +24,7 @@ class RecipientsCtrl extends Crud
     function helperIndex()
     {
         $helper = parent::helperIndex(); //Получим helper по-умолчанию
-        $helper->setTopTitle('Админ. часть модуля fsinzak'); //Установим заголовок раздела
+        $helper->setTopTitle('Получатели'); //Установим заголовок раздела
 
         //Отобразим таблицу со списком объектов
         $helper->setTable(new Table\Element([
@@ -52,6 +52,7 @@ class RecipientsCtrl extends Crud
                     $user = new \Users\Model\Orm\User($value);
                     return '<p>'.$user->getFio().'('.$user['id'].')</p>';
                 }),
+                new TableType\StrYesno('removed', t('Удален пользователем')),
                 new TableType\Actions('id', [
                     new TableType\Action\Edit($this->router->getAdminPattern('edit', [':id' => '~field~'])),
                 ], ['SettingsUrl' => $this->router->getAdminUrl('tableOptions')]),
@@ -63,7 +64,26 @@ class RecipientsCtrl extends Crud
             'Container' => new Filter\Container([
                 'Lines' => [
                     new Filter\Line(['items' => [
-                        new Filter\Type\Text('title', 'Название', ['SearchType' => '%like%']),
+                        new Filter\Type\Text('name', 'Имя', ['SearchType' => '%like%']),
+                    ]]),
+                    new Filter\Line(['items' => [
+                        new Filter\Type\Text('midname', 'Отчество', ['SearchType' => '%like%']),
+                    ]]),
+                    new Filter\Line(['items' => [
+                        new Filter\Type\Text('surname', 'Фамилия', ['SearchType' => '%like%']),
+                    ]]),
+                    new Filter\Line(['items' => [
+                        new Filter\Type\Date('birthday', 'Дата рождения'),
+                    ]]),
+                    new Filter\Line(['items' =>[
+                        new Filter\Type\User('user_id', t('Покупатель'))
+                    ]]),
+                    new Filter\Line(['items' => [
+                        new Filter\Type\Select('removed', t('Удален пользователем'), [
+                            '' => t('Не важно'),
+                            0 => t('Нет'),
+                            1 => t('Да'),
+                        ]),
                     ]]),
                 ],
             ]),

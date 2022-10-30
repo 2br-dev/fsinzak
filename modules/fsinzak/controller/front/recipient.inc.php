@@ -134,4 +134,16 @@ class Recipient extends Front
         $this->result->addSection('error', $error);
         return $this->result;
     }
+
+    public function actionGetListRecipientsModal()
+    {
+        $referer = $this->url->request('referer', TYPE_STRING, HttpRequest::commonInstance()->selfUri());
+        $current_user = \RS\Application\Auth::getCurrentUser();
+        $recipients = $current_user->getRecipients();
+        $this->view->assign([
+            'recipients' => $recipients,
+            'referer' => $referer
+        ]);
+        return $this->result->setTemplate('%fsinzak/list_recipients_modal.tpl');
+    }
 }

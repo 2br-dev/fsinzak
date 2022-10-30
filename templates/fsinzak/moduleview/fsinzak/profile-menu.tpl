@@ -5,7 +5,7 @@
     {if $shop_config.return_enable}
         <li><a href="/my/productsreturn/">Возвраты</a></li>
     {/if}
-    <li><a class="active" href="/my/recipients/">Получатели</a></li>
+    <li><a href="/my/recipients/">Получатели</a></li>
     <li><a href="/my/support/">Поддержка</a></li>
 </ul>
 <div class="col s12 hide-s-up center-align">

@@ -58,6 +58,44 @@
                                             <a class="checkout-product-link" href="{$product->getUrl()}">
                                                 {$cartitem.title}
                                             </a>
+                                            <div class="cart-equipments">
+                                                {if $product->isMultiOffersUse()}
+                                                    {foreach $product.multioffers.levels as $level}
+                                                        {if !empty($level.values)}
+                                                            <div class="catalog-select catalog-select_cart">
+                                                                <div class="catalog-select__label">{if $level.title}{$level.title}{else}{$level.prop_title}{/if}</div>
+                                                                <div class="catalog-select__options">
+                                                                    <select class="select rs-multioffer" name="products[{$index}][multioffers][{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}">
+                                                                        {foreach $level.values as $value}
+                                                                            <option {if $multioffers[$level.prop_id].value == $value.val_str}selected="selected"{/if} value="{$value.val_str}">{$value.val_str}</option>
+                                                                        {/foreach}
+                                                                    </select>
+                                                                    <div class="catalog-select__value"></div>
+                                                                </div>
+                                                            </div>
+                                                        {/if}
+                                                    {/foreach}
+
+                                                    {if $product->isOffersUse()}
+                                                        {$offers = $product->getOffers()}
+                                                        {foreach $offers as $key => $offer}
+                                                            <input id="offer_{$key}" type="hidden" class="rs-hidden-multioffer" value="{$key}" data-info='{$offer->getPropertiesJson()}' data-num="{$offer.num}"/>
+                                                        {/foreach}
+                                                        <input type="hidden" name="products[{$index}][offer]" value="{if isset($offers[$cartitem.offer])}{$cartitem.offer}{else}0{/if}" class="rs-offer"/>
+                                                    {/if}
+                                                {elseif $product->isOffersUse()}
+                                                    <div class="cart-product-offer">
+                                                        <span class="cart-offer-title">{$product.offer_caption|default:"{t}Комплектация{/t}"}:</span>
+                                                        <span class="cart-offer-value">
+                                                            {foreach $product->getOffers() as $key => $offer}
+                                                                {if $cartitem.offer==$key}
+                                                                    {$offer.title}
+                                                                {/if}
+                                                            {/foreach}
+                                                        </span>
+                                                    </div>
+                                                {/if}
+                                            </div>
                                         </td>
                                         <td data-before="Количество" class="count">
                                             {$min = $product->getAmountStep($cartitem.offer)}

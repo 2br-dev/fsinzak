@@ -85,7 +85,7 @@ class CartPage extends Front
                         }
                     }
                     if($limit['type'] == 'limit_weight'){
-                        if($cart_total_weight + ($product['weight'] * $amount) > $limit['value']){
+                        if($cart_total_weight + ($product['weight'] * $amount) > $limit['value']*1000){
                             $cart_error[] = 'limit_weight';
                         }
                     }
@@ -100,6 +100,9 @@ class CartPage extends Front
 
             $this->cart->addProduct($id, $amount, $offer, $multioffers, $concomitants, $concomitants_amount, $additional_uniq, self::CART_SOURCE_CART_PAGE, true);
 
+            if(empty($cart_error)){
+                $this->app->headers->addCookie('confirm_affiliate', 1, time() + 60*60*24*365*10, '/');
+            }
             $this->result->addSection('cart_error', $cart_error);
             if (!$this->url->isAjax()) {
                 $this->app->redirect($this->router->getUrl('shop-front-cartpage'));
@@ -262,7 +265,7 @@ class CartPage extends Front
                     }
                 }
                 if($limit['type'] == 'limit_weight'){
-                    if(($cart_total_weight + $product['weight']) > $limit['value']){
+                    if(($cart_total_weight + $product['weight']) > $limit['value']*1000){
                         $cart_error[] = 'limit_weight';
                     }
                 }

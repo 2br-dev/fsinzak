@@ -1,16 +1,21 @@
 {* Отображает текущий филиал в шапке. Позволяет открыть диалоговое окно выбора филиала. *}
 {addjs file="%affiliate%/rscomponent/affiliate.js"}
 {$parent_affiliate = $current_affiliate->getParentAffiliate()}
-<a class="rs-in-dialog geo"
-   data-href="{$router->getUrl('affiliate-front-affiliates', ['referer' => $referrer])}"
-   {if $current_affiliate.id}{$current_affiliate->getDebugAttributes()}{/if}
->
-    <i class="mdi mdi-map-marker-outline"></i>
-    <div class="loc">
-        <span class="location">{$parent_affiliate['title']}</span>
-        <span class="name">{$current_affiliate['title']|default:"{t}Выбрать учреждение{/t}"}</span>
-    </div>
-</a>
+<div class="geo hide-l-down">
+    <a class="restrictions modal-trigger" href="#restrictions">
+        <i class="mdi mdi-alert-remove-outline"></i>
+        <span>Внимание, ограничения!</span>
+    </a>
+    <a class="rs-in-dialog"
+       data-href="{$router->getUrl('affiliate-front-affiliates', ['referer' => $referrer])}"
+       {if $current_affiliate.id}{$current_affiliate->getDebugAttributes()}{/if}
+    >
+        <div class="loc">
+            <span class="location">{$parent_affiliate['title']}</span>
+            <span class="name">{$current_affiliate['title']|default:"{t}Выбрать учреждение{/t}"}</span>
+        </div>
+    </a>
+</div>
 
 {if $need_recheck}
     <!-- Окно подтверждения города -->

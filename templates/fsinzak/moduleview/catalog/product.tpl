@@ -17,7 +17,7 @@
         {if $product->canBeReserved()} rs-can-be-reserved{/if}
         {if $product.reservation == 'forced'} rs-forced-reserve{/if}"
          data-id="{$product.id}">
-            <div class="row">
+            <div class="row breadcrumbs-row">
                {moduleinsert name="\Main\Controller\Block\Breadcrumbs"}
             </div>
             <div class="row">
@@ -38,26 +38,28 @@
                     <div class="product-image-wrapper">
                         {$images = $product->getImages()}
                         {if !$images}{$images=[$product->getImageStub()]}{/if}
-                        <div class="image-wrapper hide-s-down">
+                        <div class="image-wrapper">
                             <div class="lazy q product-image" data-src="{$product->getMainImage()->getUrl($image_box, $image_box)}"></div>
                         </div>
-                        <div class="slider-wrapper">
-                            <div class="swiper" id="product-slider">
-                                <div class="swiper-wrapper">
-                                    {foreach $images as $image}
-                                        <div class="swiper-slide data-image-id="{$image.id}">
-                                            <div class="lazy h" data-src="{$image->getUrl($image_box, $image_box)}"></div>
-                                        </div>
-                                    {/foreach}
+                        {if count($images) > 1}
+                            <div class="slider-wrapper">
+                                <div class="swiper" id="product-slider">
+                                    <div class="swiper-wrapper">
+                                        {foreach $images as $image}
+                                            <div class="swiper-slide data-image-id="{$image.id}">
+                                                <div class="lazy h" data-src="{$image->getUrl($image_box, $image_box)}"></div>
+                                            </div>
+                                        {/foreach}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        {/if}
                     </div>
                 </div>
                 <div class="col xl5 offset-xl1 l7 m7 s12">
                     <div class="product-details">
                         {if $product.barcode}
-                            <p class="barcode">Артикул: <strong>{$product.barcode}</strong></p>
+                            <p class="barcode">Артикул: <strong class="rs-product-barcode">{$product.barcode}</strong></p>
                         {/if}
                         {$current_affiliate = \Affiliate\Model\AffiliateApi::getCurrentAffiliate()}
                         {if $current_affiliate}
@@ -65,22 +67,28 @@
                             {$affiliate_warehouse = $current_affiliate->getAffiliateWarehouse()}
                         {/if}
                         {$stocks = $product->getWarehouseStock()}
-                        <p>В наличии: <strong>{intval($stocks[$affiliate_warehouse][0]['stock'])} {$product->getUnit()->stitle}</strong></p>
+                        <p class="offer-stock-line">В наличии: <span class="offer-stock">{intval($stocks[$affiliate_warehouse][0]['stock'])}</span> {$product->getUnit()->stitle}</p>
                         {if $product['short_description']}
                             <p>{$product['short_description']}</p>
                         {/if}
+                        {hook name="catalog-product:offers" title="{t}Карточка товара:комплектации{/t}"}
+                            {include file="%catalog%/product_offers.tpl" affiliate_warehouse=$affiliate_wareahouse stocks=$stocks}
+                        {/hook}
                         <div class="price-wrapper">
                             <div class="row flex">
-                                <div class="col m6 s6 xs6 t6">
+                                <div class="col s12 product-page-buy-button">
                                     {hook name="catalog-product:price" title="{t}Карточка товара:цены{/t}"}
                                         <div class="item-product-price item-product-price_prod">
                                             {$old_cost = $product->getOldCost()}
                                             {$new_cost = $product->getCost()}
                                             <div class="item-product-price__new-price">
-                                                Цена: <span class="rs-price-new price">{$new_cost}</span>{$product->getCurrency()} /{$product->getUnit()->stitle}
-                                                {if $catalog_config.use_offer_unit && $offers_data && $offers_data.offers}
-                                                    <span class="rs-unit-block">/ <span class="rs-unit">{$offers_data.offers[0].unit}</span></span>
+                                                Цена: <span class="rs-price-new price">{$new_cost}</span>{$product->getCurrency()}
+                                                {if  $product->getUnit()->stitle}
+                                                    /{$product->getUnit()->stitle}
                                                 {/if}
+{*                                                {if $catalog_config.use_offer_unit && $offers_data && $offers_data.offers}*}
+{*                                                    <span class="rs-unit-block">/ <span class="rs-unit">{$offers_data.offers[0].unit}</span></span>*}
+{*                                                {/if}*}
                                             </div>
                                             {if $old_cost && $new_cost != $old_cost}
                                                 <div class="item-product-price__old-price">
@@ -88,13 +96,11 @@
                                             {/if}
                                         </div>
                                     {/hook}
-                                </div>
-                                <div class="col m6 s6 xs6 t6">
                                     <div class="card-basket-wrapper">
                                         {hook name="catalog-product:buyblock" title="{t}Карточка товара:Блок покупки{/t}"}
                                             <div class="product-aside">
                                                 <div class="product-controls">
-                                                    <div class="row g-sm-4 g-3 align-items-center">
+                                                    <div class="g-sm-4 g-3 align-items-center">
                                                         <div class="col-lg-12 col col-sm-auto order-first">
                                                             {hook name="catalog-product:action-buttons" title="{t}Карточка товара:кнопки{/t}"}
                                                                 {include file="%catalog%/product_cart_button.tpl" disable_multioffer_dialog = true}
@@ -106,6 +112,7 @@
                                         {/hook}
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -117,10 +124,10 @@
 
             {if $product.description} {$tabs["description"] = t('О товаре')} {/if}
             {if $properties || ($product->checkPropExist() == 'true')} {$tabs["property"] = t('Характеристики')} {/if}
-            {if $THEME_SETTINGS.review_enabled}{$tabs["comments"] = t('Отзывы')}{/if}
+{*            {if $THEME_SETTINGS.review_enabled}{$tabs["comments"] = t('Отзывы')}{/if}*}
             {if $files = $product->getFiles()} {$tabs["files"] = t('Файлы')}   {/if}
-            {if !$product->shouldReserve() && !empty($stick_info.warehouses)}  {$tabs["stock"] = t('Наличие')} {/if}
             {$act_tab = $tab}
+            {if !empty($tabs)}
             <div class="tab-pills__wrap mb-lg-5 mb-4">
                 <ul class="nav nav-pills tab-pills tab-pills_product tabs" id="tabs">
                     {foreach $tabs as $key => $tab_title}
@@ -143,6 +150,7 @@
                     {/foreach}
                 </ul>
             </div>
+            {/if}
             {if !empty($tabs)}
                 <div class="tab-content" id="pills-tabContent">
                     {if $tabs.description && (!$tab || $act_tab == 'property')}
@@ -208,15 +216,15 @@
                             {/hook}
                         </div>
                     {/if}
-                    {if $tabs.comments && ((!in_array('comments', $catalog_config->tabs_on_new_page) && !$tab) || $act_tab == 'comments')}
-                        <div class="tab-pane fade {if $act_tab == 'comments'}show active{/if}" id="tab-comments">
-                        <div class="row g-4">
-                            {hook name="catalog-product:comments" title="{t}Карточка товара:комментарии{/t}"}
-                                {moduleinsert name="Comments\Controller\Block\Comments" type="\Catalog\Model\CommentType\Product"}
-                            {/hook}
-                        </div>
-                    </div>
-                    {/if}
+{*                    {if $tabs.comments && ((!in_array('comments', $catalog_config->tabs_on_new_page) && !$tab) || $act_tab == 'comments')}*}
+{*                        <div class="tab-pane fade {if $act_tab == 'comments'}show active{/if}" id="tab-comments">*}
+{*                        <div class="row g-4">*}
+{*                            {hook name="catalog-product:comments" title="{t}Карточка товара:комментарии{/t}"}*}
+{*                                {moduleinsert name="Comments\Controller\Block\Comments" type="\Catalog\Model\CommentType\Product"}*}
+{*                            {/hook}*}
+{*                        </div>*}
+{*                    </div>*}
+{*                    {/if}*}
                     {if $tabs.files && ((!in_array('files', $catalog_config->tabs_on_new_page) && !$tab) || $act_tab == 'files')}
                         <div class="tab-pane fade {if $act_tab == 'files'}show active{/if}" id="tab-files">
                             {hook name="catalog-product:files" title="{t}Карточка товара:файлы{/t}"}

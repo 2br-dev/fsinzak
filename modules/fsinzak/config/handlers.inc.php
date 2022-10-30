@@ -63,8 +63,6 @@ class Handlers extends HandlerAbstract
             ->bind('orm.beforewrite.shop-order')
             ->bind('orm.afterwrite.shop-order')
 
-            ->bind('orm.afterwrite.shop-order')
-
             ->bind('controller.exec.shop-admin-orderctrl.index')
             ->bind('controller.exec.catalog-admin-ctrl.index')
             ->bind('controller.exec.article-admin-ctrl.index')
@@ -73,9 +71,24 @@ class Handlers extends HandlerAbstract
             ->bind('controller.afterexec.users-front-auth')
             ->bind('controller.beforeexec.article-block-lastnews')
             ->bind('controller.beforeexec.article-front-previewlist')
+            ->bind('controller.beforeexec.catalog-front-product')
             ->bind('cart.change')
             ->bind('checkout.confirm')
         ;
+    }
+
+    static public function controllerBeforeExecCatalogFrontProduct($params)
+    {
+        if($params['action'] == 'index'){
+            /**
+             * @var \Catalog\Controller\Front\Product $controller
+             */
+            $controller = $params['controller'];
+            $router = \RS\Router\Manager::getCurrentRoute();
+            $controller->view->assign([
+                'router_id' => $router->getId()
+            ]);
+        }
     }
 
     static public function cron($params)
@@ -92,7 +105,7 @@ class Handlers extends HandlerAbstract
                 if (($minute % 60) == 0) {
                     // Проверим заказы Которые ожидаеют оплаты для перевода в статус неоплачен
                     $api->checkOrdersWaitToPay($site['id']);
-                    // Проверим заказы которые находятся в статусе
+                    // Проверим заказы которые находятся в статусе Оплачен для перевода в статус Выполнен
                     $api->checkOrdersProcessToColony($site['id']);
                 }
             }
@@ -171,6 +184,8 @@ class Handlers extends HandlerAbstract
                 'single_cost' => 100,
                 'amount' => 1,
             );
+            $app = Application::getInstance();
+            $app->headers->addCookie('confirm_affiliate', 0, time() + 60*60*24*365*10, '/');
         }
         if($flag == $order::UPDATE_FLAG){
             $fsinzak_config = Loader::byModule('fsinzak');
@@ -323,18 +338,22 @@ class Handlers extends HandlerAbstract
                     'description' => t('Ограничение суммы заказа (руб.)'),
                     'default' => 0
                 ]),
-                'limit_weight' => new Double([
-                    'description' => t('Ограничение веса заказа (г.)'),
+                'limit_weight' => new Integer([
+                    'description' => t('Ограничение веса заказа (кг.)'),
                     'default' => 0
+                ]),
+                'periodicity_month' => new Integer([
+                    'description' => t('Количество месяцев (N) для ограничения заказов'),
+                    'hint' => t('Количество месяцев для следующиего пункта')
                 ]),
                 'periodicity' => new Integer([
-                    'description' => t('Количество заказов в месяц'),
-                    'hint' => t('Ограничение количество заказов для одного получателя в месяц. Перекрывается индивидуальными ограничениями получателя'),
+                    'description' => t('Количество заказов в N месяцев'),
+                    'hint' => t('Ограничение количество заказов для одного получателя в N месяцев. Перекрывается индивидуальными ограничениями получателя'),
                     'default' => 0
                 ]),
-            t('Контакты'),
+            t('Email менеджера'),
                 'email_for_pdf' => new Varchar([
-                    'description' => t('E-mail для отправки бланка заказа pdf')
+                    'description' => t('E-mail для отправки бланка заказа')
                 ]),
             t('Действия после оформления заказа'),
                 'time_to_not_payed_status' => new Integer(array(
@@ -434,7 +453,8 @@ class Handlers extends HandlerAbstract
             $current_affiliate = \Affiliate\Model\AffiliateApi::getCurrentAffiliate();
             $order['recipient_id'] =  $current_recipient['id'];
             $order['affiliate_id'] = $current_affiliate['id'];
-
+            $fsinzak_order_api = new \Fsinzak\Model\OrderApi();
+            $fsinzak_order_api->addCommission($order);
         }
         if($flag == $order::UPDATE_FLAG){
             if($order->isModified('status') && $order['status'] == $config['in_institution_status']){
@@ -456,8 +476,11 @@ class Handlers extends HandlerAbstract
                 unset($_SESSION[Cart::SESSION_CART_PRODUCTS][$item['product']['id']]);
             }
             $current_cart->clean();
+            $app = Application::getInstance();
             //Удалим выбранного получателя
-            Application::getInstance()->headers->addCookie('fsinzak-selected-recipient', null, -1, '/', \Setup::$COOKIE_AUTH_DOMAIN);
+            $app->headers->addCookie('fsinzak-selected-recipient', null, -1, '/', \Setup::$COOKIE_AUTH_DOMAIN);
+            // Сбросим флаг подтверждения выбранного получателя и учреждения
+            $app->headers->addCookie('confirm_affiliate', 0, time() + 60*60*24*365*10, '/');
         }
         return $params;
     }
@@ -485,10 +508,15 @@ class Handlers extends HandlerAbstract
     {
         $current_cart = \Shop\Model\Cart::currentCart();
         $products = $current_cart->getProductItems();
-        foreach ($products as $item) {
-            unset($_SESSION[Cart::SESSION_CART_PRODUCTS][$item['product']['id']]);
+        $current_affiliate = \Affiliate\Model\AffiliateApi::getCurrentAffiliate();
+        $controller = $params['controller'];
+        $selected_affiliate = $controller->url->request('affiliate', TYPE_STRING);
+        if($selected_affiliate != $current_affiliate['alias']){
+            foreach ($products as $item) {
+                unset($_SESSION[Cart::SESSION_CART_PRODUCTS][$item['product']['id']]);
+            }
+            $current_cart->clean();
         }
-        $current_cart->clean();
     }
 
     public static function controllerExecShopAdminOrderCtrlIndex(CrudCollection $helper)
@@ -541,6 +569,7 @@ class Handlers extends HandlerAbstract
     {
         //Получатели
         $routes[] = new RouterRoute('fsinzak-front-myrecipients', '/my/recipients/', null, t('Получатели'));
+        $routes[] = new RouterRoute('fsinzak-front-reviews', '/reviews/', null, t('Отзывы'));
 //        $routes[] = new RouterRoute('users-front-register', '/register/', [
 //            'controller' => 'fsinzak-front-registr'
 //        ], t('Регистрация пользователя'));
@@ -568,8 +597,48 @@ class Handlers extends HandlerAbstract
             'title' => 'Получатели',
             'alias' => 'fsinzak-recipientsctrl',
             'link' => '%ADMINPATH%/fsinzak-recipientsctrl/',
-            'parent' => 'modules',
+            'parent' => '',
             'sortn' => 50,
+            'typelink' => 'link',
+        ];
+        $items[] = [
+            'title' => 'ЧаВо',
+            'alias' => 'fsinzak-faqctrl',
+            'link' => '%ADMINPATH%/fsinzak-faqctrl/',
+            'parent' => '',
+            'sortn' => 60,
+            'typelink' => 'link',
+        ];
+        $items[] = [
+            'title' => 'Отзывы',
+            'alias' => 'fsinzak-reviewctrl',
+            'link' => '%ADMINPATH%/fsinzak-reviewctrl/',
+            'parent' => '',
+            'sortn' => 70,
+            'typelink' => 'link',
+        ];
+        $items[] = [
+            'title' => 'Текстовые блоки',
+            'alias' => 'textblocks',
+            'link' => '%ADMINPATH%/fsinzak-howorderctrl/',
+            'parent' => '',
+            'sortn' => 80,
+            'typelink' => 'link',
+        ];
+        $items[] = [
+            'title' => 'Как заказать?',
+            'alias' => 'fsinzak-howorderctrl',
+            'link' => '%ADMINPATH%/fsinzak-howorderctrl/',
+            'parent' => 'textblocks',
+            'sortn' => 90,
+            'typelink' => 'link',
+        ];
+        $items[] = [
+            'title' => 'Подвал',
+            'alias' => 'fsinzak-footerctrl',
+            'link' => '%ADMINPATH%/fsinzak-footerctrl/',
+            'parent' => 'textblocks',
+            'sortn' => 100,
             'typelink' => 'link',
         ];
         return $items;

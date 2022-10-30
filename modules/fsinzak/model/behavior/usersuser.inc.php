@@ -1,6 +1,7 @@
 <?php
 namespace Fsinzak\Model\Behavior;
 
+use fsinzak\Model\ReviewApi;
 use RS\Behavior\BehaviorAbstract;
 
 class UsersUser extends BehaviorAbstract
@@ -68,5 +69,16 @@ class UsersUser extends BehaviorAbstract
         $order_api = new \Shop\Model\OrderApi();
         $last_order = $order_api->setFilter('user_id', $user['id'])->getFirst();
         return $last_order;
+    }
+
+    /**
+     * Проверяет оставлял ли пользователь отзыв
+     */
+    public function checkReview()
+    {
+        $user = $this->owner;
+        $review_api = new ReviewApi();
+        $review = $review_api->setFilter('user_id', $user['id'])->getListCount();
+        return $review ? true : false;
     }
 }

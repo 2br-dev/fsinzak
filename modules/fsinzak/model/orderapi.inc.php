@@ -99,7 +99,7 @@ class OrderApi extends EntityList
                         Прошло более %1 часов с момента создания заказа и он перееден в статус Не оплачен. 
                         Необходимо связаться с пользователем. ', [
             $order['order_num'],
-            $time
+            $time/60
         ]);
         $user = $order->getUser();
         if ($user['id']){
@@ -201,5 +201,64 @@ class OrderApi extends EntityList
         $crm_event['date_of_create']  = date('Y-m-d H:i:s');
         $crm_event['implementer_user_id'] = $manager;
         $crm_event->insert();
+    }
+
+    /**
+     * Добавляет позиции комиссия в заказ
+     *
+     * @param \Shop\Model\Orm\Order $order - объект заказа
+     */
+    function addCommission(&$order)
+    {
+        $affiliate = new \Affiliate\Model\Orm\Affiliate($order->getOrderAffiliateId());
+        $commission = $affiliate->getAffiliateCommission();
+        $cart = $order->getCart();
+        $cart_data = $cart->getCartData();
+        $order_data = $cart->getOrderData();
+        $items = [];
+        foreach($order_data['items'] as $uniq=>$item) {
+            $items[$uniq] = array();
+        }
+
+        if($commission['fixed']){
+            $uniq = self::generateId();
+            $items[$uniq] = array(
+                'uniq' => $uniq,
+                'title' => 'Фиксированная комиссия за оформление заказа',
+                'entity_id' => 100001,
+                'type' => $cart::TYPE_PRODUCT,
+                'single_weight' => 0,
+                'single_cost' => $commission['fixed'],
+                'amount' => 1,
+            );
+        }
+        if($commission['percent']){
+            $order_sum_with_fix_commission = floatval($cart_data['total_without_delivery_unformatted']) + $commission['fixed'];
+            $commission_percent = $order_sum_with_fix_commission * $commission['percent'] / 100;
+            $uniq = self::generateId();
+            $items[$uniq] = array(
+                'uniq' => $uniq,
+                'title' => 'Комиссия платежной системы',
+                'entity_id' => 100002,
+                'type' => $cart::TYPE_PRODUCT,
+                'single_weight' => 0,
+                'single_cost' => $commission_percent,
+                'amount' => 1,
+            );
+        }
+
+        $cart->updateOrderItems($items);
+        $cart->saveOrderData();
+    }
+
+    /**
+     * Генерирует уникальный в рамках пользователя id позиции в корзине
+     *
+     * @return string
+     */
+    protected function generateId()
+    {
+        $symbols = array_merge(range('a', 'z'), range('0', '9'));
+        return HelperTools::generatePassword(10, $symbols);
     }
 }

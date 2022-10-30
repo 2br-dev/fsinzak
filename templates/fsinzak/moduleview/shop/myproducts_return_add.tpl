@@ -9,137 +9,105 @@
         <section>
             <div class="container">
                 <div class="row">
+                    <div class="col s12">
+                        <h1>Личный кабинет</h1>
+                    </div>
                     <div class="col l2 m12">
                         {include file="%fsinzak%/profile-menu.tpl"}
                     </div>
                     <div class="col l10 m12">
-                        <div>
-                            <h2>{t}Заявление на возврат по заказу №{$order.order_num} от {$order.dateof|dateformat:"@date"}{/t}</h2>
+                        <div class="row">
+                            <div class="col s12">
+                                <h2>{t}Заявление на возврат по заказу №{$order.order_num} от {$order.dateof|dateformat:"@date"}{/t}</h2>
+                                <p class="info">
+                                    С помощью данного раздела, вы сможете оформить заявку на возврат товара, а также распечатать бланк заявления на возврат товара.
+                                    После оформления заявки с вами свяжется менеджер и расскажет о дальнейших действиях. Пожалуйста, ознакомьтесь
+                                    с <a href="/rules.html">правилами возврата товаров</a> перед оформлением заявки.
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            {t url={$router->getUrl('shop-front-myproductsreturn', ['Act' => 'rules'])} alias="Правила возврата товаров"}С помощью данного раздела, вы сможете оформить заявку на возврат товара, а также распечатать бланк заявления на возврат товара. После оформления заявки с вами свяжется менеджер и расскажет о дальнейших действиях. Пожалуйста, ознакомьтесь с <a class="rs-in-dialog" href="%url">правилами возврата товаров</a> перед оформлением заявки.{/t}
-                        </div>
-
-                        <form method="POST" action="{urlmake}" >
-                            {csrf}
-                            {$this_controller->myBlockIdInput()}
-                            <input type="hidden" name="order" value="{$order.order_num}">
-                            {if isset($return)}
-                                <input type="hidden" name="edit" value="{$return.id}">
-                            {/if}
-                            <div class="section pt-0">
-                                {foreach $return->getNonFormErrors() as $error}
-                                    <div class="alert alert-danger">{$error}</div>
-                                {/foreach}
-                                <div class="lk-returns">
-                                    <div class="lk-returns__title">{t}Товары доступные для возврата{/t}</div>
-                                    <div class="lk-returns__head">
-                                        <div class="d-flex">
-                                            <div>
-                                                <div class="lk-return-checkbox"></div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="row g-3">
-                                                    <div class="col-sm-5">{t}Название{/t}</div>
-                                                    <div class="col-sm-2">{t}Артикул{/t}</div>
-                                                    <div class="col">{t}Количество{/t}</div>
-                                                    <div class="col-auto">{t}Цена{/t}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <ul class="lk-returns__list">
-                                        {foreach $order_data.items as $item}
-                                            <li class="d-flex align-items-md-center"
-                                                data-uniq="{$item.cartitem.uniq}"
-                                                data-price="{$item.single_cost_with_discount}">
-                                                <div class="lk-return-checkbox">
-                                                    <input class="checkbox rs-return-checkbox" type="checkbox"
-                                                           name="return_items[{$item.cartitem.uniq}][uniq]"
-                                                           value="{$item.uniq}" {if isset($return_items[$item.cartitem.uniq])}checked{/if}/>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="row g-md-3 g-2 align-items-center align-items-md-start">
-                                                        <div class="col-md-5 col-12">
+                            <form method="POST" action="{urlmake}" class="col s12">
+                                {csrf}
+                                {$this_controller->myBlockIdInput()}
+                                <input type="hidden" name="order" value="{$order.order_num}">
+                                {if isset($return)}
+                                    <input type="hidden" name="edit" value="{$return.id}">
+                                {/if}
+                                <div class="section pt-0">
+                                    {foreach $return->getNonFormErrors() as $error}
+                                        <div class="alert alert-danger">{$error}</div>
+                                    {/foreach}
+                                    <div class="lk-returns">
+                                        <h3>Товары, доступные для возврата</h3>
+                                        <table id="available-returns">
+                                            <thead>
+                                                <th>&nbsp;</th>
+                                                <th>Название</th>
+                                                <th>Количество</th>
+                                                <th>Цена</th>
+                                            </thead>
+                                            <tbody class="lk-returns__list">
+                                                {foreach $order_data.items as $item}
+                                                    <tr class="details-row" data-uniq="{$item.cartitem.uniq}"
+                                                        data-price="{$item.single_cost_with_discount}">
+                                                        <td>
+                                                            <div class="check-field">
+                                                                <input
+                                                                    class="checkbox rs-return-checkbox" type="checkbox"
+                                                                    name="return_items[{$item.cartitem.uniq}][uniq]"
+                                                                    value="{$item.uniq}" {if isset($return_items[$item.cartitem.uniq])}checked{/if}
+                                                                    id="{$item.cartitem.uniq}"
+                                                                /><label for="{$item.cartitem.uniq}"></label>
+                                                            </div>
+                                                        </td>
+                                                        <td data-before="Название" class="name">
                                                             {$item.cartitem.title}
                                                             {if !empty($item.cartitem.model)}
                                                                 <div class="text-gray fs-6">{$item.cartitem.model}</div>
                                                             {/if}
-                                                        </div>
-                                                        <div class="col-md-2 col-12">
-                                                            {$item.cartitem.barcode}
-                                                        </div>
-                                                        <div class="col">
+                                                        </td>
+                                                        <td data-before="Количество" class="count">
                                                             <div class="cart-amount rs-cart-amount">
-                                                                <button class="rs-step-down" type="button" {if !isset($return_items[$item.cartitem.uniq])}disabled{/if}>
-                                                                    <svg width="12" height="12" viewBox="0 0 12 12"
-                                                                         xmlns="http://www.w3.org/2000/svg">
-                                                                        <path d="M10.4752 6.46875H1.47516V4.96875H10.4752V6.46875Z"/>
-                                                                    </svg>
+                                                                <button class="rs-step-down counter {if !isset($return_items[$item.cartitem.uniq])}disabled{/if}" type="button" {if !isset($return_items[$item.cartitem.uniq])}disabled{/if}>
+                                                                    <i class="mdi mdi-minus"></i>
                                                                 </button>
                                                                 <div class="cart-amount__input">
                                                                     {$step = $item.cartitem->getEntity()->getAmountStep()}
                                                                     <input type="number" class="rs-return-amount" value="{$return_items[$item.cartitem.uniq].amount|default:$step}" step="{$step}" min="{$step}" max="{$item.cartitem.amount}" name="return_items[{$item.cartitem.uniq}][amount]" {if !isset($return_items[$item.cartitem.uniq])}disabled{/if}>
                                                                     <span>{$item.cartitem->getUnit()->stitle}</span>
                                                                 </div>
-                                                                <button class="rs-step-up" type="button" {if !isset($return_items[$item.cartitem.uniq])}disabled{/if}>
-                                                                    <svg width="12" height="12" viewBox="0 0 12 12"
-                                                                         xmlns="http://www.w3.org/2000/svg">
-                                                                        <path d="M10.7326 6.94364H6.87549V10.8008H5.58978V6.94364H1.73264V5.65792H5.58978V1.80078H6.87549V5.65792H10.7326V6.94364Z"/>
-                                                                    </svg>
+                                                                <button class="rs-step-up counter {if !isset($return_items[$item.cartitem.uniq])}disabled{/if}" type="button" {if !isset($return_items[$item.cartitem.uniq])}disabled{/if}>
+                                                                    <i class="mdi mdi-plus"></i>
                                                                 </button>
                                                             </div>
-                                                            {*
-                                                            <select id="amount{$item.cartitem.uniq}" class="select rs-return-amount" name="return_items[{$item.cartitem.uniq}][amount]" {if !isset($return_items[$item.cartitem.uniq])}disabled{/if}>
-                                                                {$step = $item.cartitem->getEntity()->getAmountStep()}
-                                                                {$range = range($step, $item.cartitem.amount, $step)}
-                                                                {foreach $range as $amount}
-                                                                    <option {if $return_items[$item.cartitem.uniq].amount == $amount}selected{/if}>{$amount}</option>
-                                                                {/foreach}
-                                                            </select>*}
-                                                        </div>
-                                                        <div class="fw-bold col-auto text-nowrap">{$item.single_cost_with_discount|format_price} {$return.currency_stitle}</div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        {/foreach}
-                                        {foreach $order_data.other as $key => $item}
-                                            {if $item.cartitem.type == 'delivery'}
-                                                <li class="d-flex align-items-md-center"
-                                                    data-uniq="{$item.cartitem.uniq}"
-                                                    data-price="{$item.total}">
-                                                    <div class="lk-return-checkbox">
-                                                        <input class="checkbox rs-return-checkbox" type="checkbox"
-                                                               name="return_items[{$item.cartitem.uniq}][uniq]"
-                                                               value="{$item.cartitem.uniq}" {if isset($return_items[$item.cartitem.uniq])}checked{/if}/>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="row g-md-3 g-2 align-items-center align-items-md-start">
-                                                            <div class="col-md-5 col-12">
-                                                                {$item.cartitem.title}
-                                                            </div>
-                                                            <div class="col-md-2 col-12"></div>
-                                                            <div class="col">
-                                                                <input id="amount{$item.cartitem.uniq}"
-                                                                       type="hidden"
-                                                                       class="rs-return-amount"
-                                                                       name="return_items[{$item.cartitem.uniq}][amount]"
-                                                                       value="1" {if !isset($return_items[$item.cartitem.uniq])}disabled{/if}>
-                                                            </div>
-                                                            <div class="fw-bold col-auto text-nowrap">{$item.total|format_price} {$return.currency_stitle}</div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            {/if}
-                                        {/foreach}
-                                    </ul>
+
+{*                                                            <select id="amount{$item.cartitem.uniq}" class="select rs-return-amount" name="return_items[{$item.cartitem.uniq}][amount]" {if !isset($return_items[$item.cartitem.uniq])}disabled{/if}>*}
+{*                                                                {$step = $item.cartitem->getEntity()->getAmountStep()}*}
+{*                                                                {$range = range($step, $item.cartitem.amount, $step)}*}
+{*                                                                {foreach $range as $amount}*}
+{*                                                                    <option {if $return_items[$item.cartitem.uniq].amount == $amount}selected{/if}>{$amount}</option>*}
+{*                                                                {/foreach}*}
+{*                                                            </select>*}
+                                                        </td>
+                                                        <td data-before="Цена" class="price">
+                                                            {$item.single_cost_with_discount|format_price} {$return.currency_stitle}
+                                                        </td>
+                                                    </tr>
+                                                {/foreach}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                                 <div class="lk-returns__list mt-3 fw-bold fs-3">
                                     {t}Итого{/t}: <span class="rs-return-total">{$return.cost_total|format_price}</span> {$return.currency_stitle}
                                 </div>
-                            </div>
-                            <div>
-                                <h2>{t}Заявление{/t}</h2>
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="divider"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <h2>{t}Заявление{/t}</h2>
                                 <div class="col-xl-8">
                                     <div class="row g-3">
                                         <div>

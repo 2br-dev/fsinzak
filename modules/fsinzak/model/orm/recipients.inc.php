@@ -55,6 +55,10 @@ class Recipients extends OrmObject
                     'hint' => t('Ограничение количество заказов для этого получателя в месяц'),
                     'default' => 0
                 ]),
+                'periodicity_month' => new Integer([
+                    'description' => t('Количество месяцев (N) для ограничения заказов'),
+                    'hint' => t('Количество месяцев для следующиего пункта')
+                ]),
         ]);
     }
 
@@ -109,6 +113,7 @@ class Recipients extends OrmObject
         if($this['periodicity'] != 0){
             $limit['type'] = 'periodicity';
             $limit['value'] = $this['periodicity'];
+            $limit['value_month'] = $this['periodicity_month'];
             $limits[] = $limit;
         }
         return $limits;
@@ -132,20 +137,19 @@ class Recipients extends OrmObject
      * Возвращает количество заказов на получателя в текущем месяце
      * @return int
      */
-    public function getRecipientCountOrderPerMonth()
+    public function getRecipientCountOrderForPeriod()
     {
-        $current_month = date('m');
-        $current_year = date('Y');
-        $day_start = '01';
-        $day_end = date('t');
-        $date_start = $current_year.'-'.$current_month.'-'.$day_start;
-        $date_end = $current_year.'-'.$current_month.'-'.$day_end;
+        $config = \RS\Config\Loader::byModule('fsinzak');
+        $periodicity = $config->getPeriodicity();
+        $date_start = date('Y-m-d');
+        $date_end = date('Y-m-d', strtotime("-".$periodicity['value_month']." month", strtotime($date_start)));
         $orders_count = \RS\Orm\Request::make()
             ->from(new \Shop\Model\Orm\Order())
             ->where([
                 'recipient_id' => $this['id']
             ])
-            ->where("DATE('dateof') >= {$date_start} AND DATE('dateof') <= {$date_end}")
+            ->where('`status` = 9 OR `status` = 6')
+            ->where("DATE(`dateof`) <= '{$date_start}' AND DATE(`dateof`) >= '{$date_end}'")
             ->exec()->rowCount();
         return $orders_count;
     }
@@ -167,5 +171,19 @@ class Recipients extends OrmObject
     public function getBirthday($format)
     {
         return date($format, strtotime($this['birthday']));
+    }
+
+    /**
+     * Вовзращает ограничение по периодичности заказов (личные ограничения)
+     * @return array
+     */
+    public function getPeriodicity()
+    {
+        $periodicity = [];
+        if($this['periodicity']){
+            $periodicity['value'] = $this['periodicity'];
+            $periodicity['value_month'] = $this['periodicity_month'];
+        }
+        return $periodicity;
     }
 }

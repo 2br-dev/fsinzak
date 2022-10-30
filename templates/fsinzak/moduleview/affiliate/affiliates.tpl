@@ -60,8 +60,8 @@
                             {if $limit['type'] == 'limit_weight'}
                                 <li id="limit-weight">Общий вес заказа не более <span id="limit-weight-value">{$limit['value']}</span>г</li>
                             {/if}
-                            {if $limit['type'] == 'perodicity'}
-                                <li id="limit-periodicity">не чаще <span id="limit-weight-value">{$limit['value']}</span> раза в месяц</li>
+                            {if $limit['type'] == 'periodicity'}
+                                <li id="limit-periodicity">не более <span id="limit-weight-value">{$limit['value']}</span> заказов в {$limit['value_month']} мес.</li>
                             {/if}
                         {/foreach}
                     {else}

@@ -68,7 +68,7 @@ class CartFull extends StandartBlock
             $products = $this->url->request('products', TYPE_ARRAY);
             $coupon = trim($this->url->request('coupon', TYPE_STRING));
 
-            //Вставить кода на проверку ограничений
+            //Проверка ограничений
             $cart = $this->cart;
             $cart_products = $cart->getProductItems();
 
@@ -86,21 +86,23 @@ class CartFull extends StandartBlock
             $product_limit = $current_affiliate->getAffiliateProductLimit();
 
             foreach ($cart_products as $index => $item) {
-                //Новое количество товара в корзине
-                $new_amount = $products[$index]['amount'];
-                /**
-                 * @var \Catalog\Model\Orm\Product $product
-                 */
-                $product = $item['product'];
+                if(isset($products[$index])) {
+                    //Новое количество товара в корзине
+                    $new_amount = $products[$index]['amount'];
+                    /**
+                     * @var \Catalog\Model\Orm\Product $product
+                     */
+                    $product = $item['product'];
 
-                $product_single_cost = $product->getCost(null, null, false);
-                $product_single_weight = $product['weight'];
+                    $product_single_cost = $product->getCost(null, null, false);
+                    $product_single_weight = $product['weight'];
 
-                $product_cost = floatval($product_single_cost) * intval($new_amount);
-                $product_weight = floatval($product_single_weight) * intval($new_amount);
+                    $product_cost = floatval($product_single_cost) * intval($new_amount);
+                    $product_weight = floatval($product_single_weight) * intval($new_amount);
 
-                $new_total_cost += $product_cost;
-                $new_total_weight += $product_weight;
+                    $new_total_cost += $product_cost;
+                    $new_total_weight += $product_weight;
+                }
             }
 
             if(!empty($limits)){

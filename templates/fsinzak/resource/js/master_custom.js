@@ -1,11 +1,12 @@
 $(document).ready(function(){
     $('body').on('click', '#add-recipient', addRecipient);
     $('body').on('click', '.recipient-item', setRecipient);
+    $('body').on('click', '.review-create', createReview);
     $('body').on('click', '.recipient-edit', editRecipient);
     $('body').on('click', '.recipient-create', createRecipient);
     $('body').on('focus', '.datepicker', callDatepicker);
+    $('body').on('click', '.confirm-affiliate', reloadPage);
     // $('body').on('click', '.datepicker', initDatepicker);
-
     $('body').on('click', '.tel', phoneMask);
     $('body').on('input', '.tel', phoneMask);
     $('body').on('focus', '.tel', phoneMask);
@@ -27,10 +28,37 @@ $(document).ready(function(){
     }
 });
 
+function createReview(e) {
+    if(e !== 'undefined'){
+        e.preventDefault();
+    }
+    $.ajax({
+        url: $(this).data('url'),
+        type: 'POST',
+        dataType: 'JSON',
+        data: {
+            user_id: $(this).data('id'),
+            referer: $(this).data('referer'),
+            text: $('textarea[name="review_text"]').val()
+        },
+        success: function(res) {
+            console.log(res);
+        },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+}
+
+function reloadPage() {
+    setTimeout(function (e) {
+        location.reload();
+    }, 500);
+}
+
 function callDatepicker() {
     var instance = M.Datepicker.getInstance($(this));
     instance.open();
-    console.log($(this).datepicker);
 }
 
 function initDatepicker() {
@@ -137,6 +165,7 @@ function changeCitizen() {
         $('.initDadata').removeClass('initDadata');
         $('input[name="phone"]').removeAttr('readonly');
         $('.tel').val('').removeClass('tel');
+        $('.mask-pasport-number').val('').unmask();
         $('.mask-pasport-number').removeClass('mask-pasport-number');
     }else {
         $('.register-phone-block').removeClass('no-rf');
@@ -149,6 +178,7 @@ function changeCitizen() {
         let oldPhone = $('.register-phone-block').data('old');
         $('input[name="phone"]').val(oldPhone);
         $('input[name="phone"]').addClass('tel');
+        $('input[name="data[pasport]"]').val('').addClass('mask-pasport-number');
     }
 }
 
@@ -237,6 +267,17 @@ function addRecipient(e) {
 function fillDateStamp(date, el) {
     let hiddenInput = el.parents('.input-field').next();
     hiddenInput.val(date.getTime()/1000);
+    let selectedMonth = date.getMonth() + 1;
+    if(selectedMonth >= 10){
+        $('.year-text').text(date.getDate()+'.'+selectedMonth+'.'+date.getFullYear());
+    }else{
+        $('.year-text').text(date.getDate()+'.0'+selectedMonth+'.'+date.getFullYear());
+    }
+}
+
+function fillLeftSideWhenOpen(el) {
+    $('.year-text').text(el.val());
+    $('.date-text').text('');
 }
 
 function fillDefaultDate(context){

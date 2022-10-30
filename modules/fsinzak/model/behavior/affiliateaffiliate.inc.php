@@ -36,13 +36,13 @@ class AffiliateAffiliate extends BehaviorAbstract
         $limit = [];
         if($affiliate['limit_weight'] != 0){
             $limit['type'] = 'limit_weight';
-            $limit['value'] = $affiliate['limit_weight'];
+            $limit['value'] = $affiliate['limit_weight'] * 1000;
             $limits[] = $limit;
         }else{
             $parent_affiliate = new \Affiliate\Model\Orm\Affiliate($affiliate['parent_id']);
             if($parent_affiliate['limit_weight']){
                 $limit['type'] = 'limit_weight';
-                $limit['value'] = $parent_affiliate['limit_weight'];
+                $limit['value'] = $parent_affiliate['limit_weight'] * 1000;
                 $limits[] = $limit;
             }
         }
@@ -50,12 +50,14 @@ class AffiliateAffiliate extends BehaviorAbstract
         if($affiliate['periodicity'] != 0){
             $limit['type'] = 'periodicity';
             $limit['value'] = $affiliate['periodicity'];
+            $limit['value_month'] = $affiliate['periodicity_month'];
             $limits[] = $limit;
         }else{
             $parent_affiliate = new \Affiliate\Model\Orm\Affiliate($affiliate['parent_id']);
             if($parent_affiliate['periodicity']){
                 $limit['type'] = 'periodicity';
                 $limit['value'] = $parent_affiliate['periodicity'];
+                $limit['value_month'] = $parent_affiliate['periodicity_month'];
                 $limits[] = $limit;
             }
         }
@@ -76,8 +78,8 @@ class AffiliateAffiliate extends BehaviorAbstract
             $limit = $affiliate[$type];
         }else{
             $parent_affiliate = new \Affiliate\Model\Orm\Affiliate($affiliate['parent_id']);
-            if($parent_affiliate['limit_weight'] != 0){
-                $limit = $parent_affiliate['limit_weight'];
+            if($parent_affiliate[$type] != 0){
+                $limit = $parent_affiliate[$type];
             }
         }
         return $limit;
@@ -294,4 +296,26 @@ class AffiliateAffiliate extends BehaviorAbstract
     {
         return $this->getValueByName('manager_for_check_status');
     }
+
+    /**
+     * Возвращает ограничение учреждения по периодичности заказов на одного пользователя
+     * @return array
+     */
+    public function getAffiliatePeriodicity()
+    {
+        $affiliate = $this->owner;
+        $periodicity = [];
+        if($affiliate['periodicity']){
+            $periodicity['value'] = $affiliate['periodicity'];
+            $periodicity['value_month'] = $affiliate['periodicity_month'];
+        }else{
+            $parent_affilite = $affiliate->getParentAffiliate();
+            if($parent_affilite['periodicity']){
+                $periodicity['value'] = $parent_affilite['periodicity'];
+                $periodicity['value_month'] = $parent_affilite['periodicity_month'];
+            }
+        }
+        return $periodicity;
+    }
+
 }

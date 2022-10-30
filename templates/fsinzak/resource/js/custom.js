@@ -12,11 +12,16 @@ new class Anton extends RsJsCore.classes.component
             onSelect: function(data){
                 fillDateStamp(data, $(this.el));
             },
+            onOpen: function(){
+            },
+            onDraw: function( e ){
+                fillLeftSideWhenOpen(e.$el);
+            },
             defaultDate: fillDefaultDate(context),
             setDefaultDate: true,
-            autoClose: true,
+            autoClose: false,
             format: 'dd.mm.yyyy',
-            yearRange: [new Date().getFullYear() - 80, new Date().getFullYear()],
+            yearRange: [new Date().getFullYear() - 100, new Date().getFullYear()],
             i18n: {
                 cancel: "Отмена",
                 clear: "Очистить",
@@ -24,7 +29,7 @@ new class Anton extends RsJsCore.classes.component
                 months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
                 monthsShort: ["Янв", "Фев", "Мрт", "Апр", "Май", "Июн", "Июл", "Авг", "Снб", "Окт", "Ноя", "Дек"],
                 weekdays: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
-                weekdaysShort: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+                weekdaysShort: ['', '', '', '', '', '', ''],
                 weekdaysAbbrev: ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']
             }
         });

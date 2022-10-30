@@ -292,7 +292,6 @@ new class Cart extends RsJsCore.classes.component {
             method:'POST',
             body: formData
         }).then(response => {
-            console.log(response.limit_error);
             if(response.limit_error !== ""){
 
                 if(response.limit_error === 'weight'){
@@ -308,7 +307,6 @@ new class Cart extends RsJsCore.classes.component {
             if (response.redirect) {
                 location.href = response.redirect;
             }
-
             if (response.cart.items_count === 0 && this.plugins.modal.isOpen()) {
                 this.plugins.modal.close();
             } else {
@@ -332,6 +330,9 @@ new class Cart extends RsJsCore.classes.component {
      */
     updateCartBlock(response) {
         if (response) {
+            if (this.plugins.modal.isOpen()) {
+                this.plugins.modal.close();
+            }
             global.cartProducts = response.cart.session_cart_products;
             document.querySelectorAll(this.settings.cartBlock).forEach((cartBlock) => {
 
@@ -506,8 +507,10 @@ class SmartAmount
 
         this.settings = {...settings, ...defaults};
         this.smartButton = element;
-        this.smartButton.querySelector(this.settings.smartAmountBuyButton)
-            .addEventListener('click', event => this.addProduct(event));
+        if(this.smartButton.querySelector(this.settings.smartAmountBuyButton)){
+            this.smartButton.querySelector(this.settings.smartAmountBuyButton)
+                .addEventListener('click', event => this.addProduct(event));
+        }
 
         this.smartButton.querySelector(this.settings.smartAmountIncButton)
             .addEventListener('click', event => this.incButton(event));
@@ -567,6 +570,7 @@ class SmartAmount
      * Увеличивает количество товара в корзине
      */
     incButton() {
+        console.log('incButton');
         let oldValue = parseFloat(this.amountInput.value);
         let newValue = Math.round((oldValue + this.amountParams.amountStep) * 1000) / 1000;
         let breakpoint = parseFloat(this.amountParams.amountBreakPoint);
@@ -577,13 +581,14 @@ class SmartAmount
         if (oldValue < breakpoint && newValue > breakpoint) {
             newValue = breakpoint;
         }
+
         if (this.amountParams.maxAmount !== null && newValue > this.amountParams.maxAmount) {
             newValue = this.amountParams.maxAmount;
             this.smartButton.dispatchEvent(new CustomEvent('max-limit', {bubbles:true}));
         } else {
             this.smartButton.dispatchEvent(new CustomEvent('increase-amount', {bubbles:true}));
         }
-        this.amountInput.value = parseInt(newValue);
+        this.amountInput.value = newValue;
         this.amountInput.dispatchEvent(new Event('keyup', {bubbles: true}));
     }
 
@@ -616,6 +621,7 @@ class SmartAmount
      * Изменяет количество товара на введенное вручную
      */
     changeAmount(event) {
+
         let noChangesKeycodes = [16, 17, 18, 35, 36, 37, 39];
         if (noChangesKeycodes.includes(event.keyCode)) {
             return false;
@@ -647,7 +653,6 @@ class SmartAmount
                 method: 'post',
                 body: formData
             }).then(response => {
-                console.log(response);
                 if (response.success) {
                     // Обновляем корзину на экране
                     RsJsCore.components.cart.updateCartBlock(response);

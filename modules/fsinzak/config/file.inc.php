@@ -112,6 +112,17 @@ class File extends ConfigObject
                 $limit['value'] = $affiliate->getAffiliateLimitByType('limit_weight');
                 $limits[] = $limit;
             }
+            if(!empty($recipient->getRecipientLimitByType('periodicity'))){
+                $limit['type'] = 'limit_weight';
+                $limit['value'] = $recipient->getRecipientLimitByType('periodicity');
+                $limit['value_month'] = $recipient['periodicity_month'];
+                $limits[] = $limit;
+            }else{
+                $limit['type'] = 'limit_weight';
+                $limit['value'] = $affiliate->getRecipientLimitByType('periodicity');
+                $limit['value_month'] = $affiliate['periodicity_month'];
+                $limits[] = $limit;
+            }
         }
         return $limits;
     }
@@ -138,5 +149,36 @@ class File extends ConfigObject
     public function getDirsToMainPage()
     {
         return $this['dirs_to_main_page'];
+    }
+
+    public function getPeriodicity()
+    {
+        /**
+         * @var \Fsinzak\Model\Orm\Recipients $recipient
+         */
+        $recipient = new \Fsinzak\Model\Orm\Recipients($_COOKIE['fsinzak-selected-recipient']);
+        if(!empty($recipient->getPeriodicity())){
+            return $recipient->getPeriodicity();
+        }
+        /**
+         * @var \Affiliate\Model\Orm\Affiliate $affiliate
+         */
+        $affiliate = \Affiliate\Model\AffiliateApi::getCurrentAffiliate();
+        return $affiliate->getAffiliatePeriodicity();
+    }
+
+    /**
+     * Провереяте можно ли сделать заказа Для получателя на ограничение периодичности
+     * @return bool
+     */
+    public function canOrderDo()
+    {
+        $periodicity = $this->getPeriodicity();
+        $recipient = new \Fsinzak\Model\Orm\Recipients($_COOKIE['fsinzak-selected-recipient']);
+        $order_count = $recipient->getRecipientCountOrderForPeriod();
+        if($periodicity['value'] > $order_count){
+            return true;
+        }
+        return false;
     }
 }

@@ -592,7 +592,9 @@ class Checkout extends StandartBlock
             $commission_sum = 0;
             $total_sum = 0;
             if(!empty($commission)){
-                $commission_sum = $commission['fixed'] + (floatval($cart_data['total_without_delivery_unformatted'])*$commission['percent']/100);
+                $order_sum_with_fix_commission = floatval($cart_data['total_without_delivery_unformatted']) + $commission['fixed'];
+                $commission_percent = $order_sum_with_fix_commission * $commission['percent'] / 100;
+                $commission_sum = $commission['fixed'] + $commission_percent;
                 $total_sum = $cart_data['total_without_delivery_unformatted'] + $commission_sum;
             }
             // Конец добавления комиссии

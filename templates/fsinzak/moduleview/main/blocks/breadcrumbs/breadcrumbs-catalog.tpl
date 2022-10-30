@@ -1,6 +1,6 @@
 {$bc = $app->breadcrumbs->getBreadCrumbs()}
 {if !empty($bc)}
-    <ul class="breadcrumb__list breadcrumbs">
+    <ul class="breadcrumb__list breadcrumbs hide-l-down">
         {foreach from=$bc item=item name="path"}
             {if empty($item.href)}
                 <li class="breadcrumb__item {if $smarty.foreach.path.last}last{/if}"><span>{$item.title}</span></li>

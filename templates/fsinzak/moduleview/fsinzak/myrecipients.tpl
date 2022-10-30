@@ -5,7 +5,10 @@
             <div class="container">
                 <div class="row">
                     <div class="col s12">
-                        <h1>Управление аккаунтом</h1>
+                        {moduleinsert name="\Main\Controller\Block\Breadcrumbs" indexTemplate="%main%/blocks/breadcrumbs/breadcrumbs-catalog.tpl"}
+                    </div>
+                    <div class="col s12">
+                        <h1>Личный кабинет</h1>
                     </div>
                     <div class="col l2 m12 hide-l-down">
                         {include file="%fsinzak%/profile-menu.tpl"}

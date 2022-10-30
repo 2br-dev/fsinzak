@@ -5,6 +5,12 @@
         <section>
             <div class="container">
                 <div class="row">
+                    <div class="col s12">
+                        {moduleinsert name="\Main\Controller\Block\Breadcrumbs" indexTemplate="%main%/blocks/breadcrumbs/breadcrumbs-catalog.tpl"}
+                    </div>
+                    <div class="col s12">
+                        <h1>Личный кабинет</h1>
+                    </div>
                     <div class="col l2 m12 hide-l-down">
                         {include file="%fsinzak%/profile-menu.tpl"}
                     </div>
@@ -37,7 +43,7 @@
                                         {/if}
 
                                         <div class="row">
-                                            <div class="col l4 m6 s8 xs12">
+                                            <div class="col l6 m6 s8 xs12">
                                                 <h3 class="support">Новое обращение</h3>
 
                                                 {if count($list)>0}

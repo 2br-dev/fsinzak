@@ -88,7 +88,6 @@ class CatalogProduct extends BehaviorAbstract
                 $amount += $offer_amount;
             }
         }
-
         return $amount;
     }
 

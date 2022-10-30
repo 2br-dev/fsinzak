@@ -3,12 +3,35 @@
 {*{addjs file="%catalog%/rscomponent/category.js"}*}
 {*{/nocache}*}
 {if $dirlist->count()}
-    <ul>
-        {foreach $dirlist as $node}
-            {$dir = $node->getObject()}
-            <li><a href="{$dir->getUrl()}">{$dir.name}</a></li>
-        {/foreach}
-    </ul>
+    <div class="container">
+        <div class="levels">
+            <ul class="mega-menu" id="l1">
+                {foreach $dirlist as $node}
+                    {$dir = $node->getObject()}
+                    <li class="{if $node->getChildsCount()}folder{/if}">
+                        <a
+                            href="{$dir->getUrl()}"
+                            class="lazy"
+                            {if $dir.image}
+                                data-src="{$dir.__image->getUrl(24, 24, 'cxy')}"
+                            {else}
+                                data-src="{$THEME_IMG}/icons/availability.svg"
+                            {/if}
+                        >{$dir.name}</a>
+                        {if $node->getChildsCount()}
+                            <ul>
+                                {foreach $node->getChilds() as $sub_node}
+                                    {$sub_dir = $sub_node->getObject()}
+                                    <li><a href="{$sub_dir->getUrl()}">{$sub_dir.name}</a></li>
+                                {/foreach}
+                            </ul>
+                        {/if}
+                    </li>
+                {/foreach}
+            </ul>
+            <ul id="l2"></ul>
+        </div>
+    </div>
 {*    <div class="row g-3">*}
 {*        <div class="col-auto">*}
 {*            <div class="head-dropdown-catalog__categories py-xl-6 py-4">*}

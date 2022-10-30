@@ -640,6 +640,7 @@ class SmartAmount
 
     static init(selector) {
         document.querySelectorAll(selector ? selector : '.rs-sa').forEach(element => {
+            console.log(element);
             if (!element.smartAmount) {
                 element.smartAmount = new SmartAmount(element);
             }
