@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="row rs-products-list flex">
-                    <div class="col xl3 l4 hide-l-down">
+                    <div class="col xl3 l3 hide-l-down">
                         <div class="catalog-sidebar">
                             <ul class="tabs catalog-tabs">
                                 <li class="tab"><a href="#navi" class="active">Категории</a></li>

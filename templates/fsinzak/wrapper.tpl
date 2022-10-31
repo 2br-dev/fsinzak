@@ -94,9 +94,9 @@
     <li><a href="/news.html">Новости</a></li>
     <li><a href="/contacts.html">Контакты</a></li>
 </ul>
-{if $current_recipient && !$can_order_do}
-    <p>Для выбранного получателя превышен лимит заказов за период</p>
-{/if}
+{*{if $current_recipient && !$can_order_do}*}
+{*    <p>Для выбранного получателя превышен лимит заказов за период</p>*}
+{*{/if}*}
 {block name="content"}
     {$app->blocks->getMainContent()}
 {/block}

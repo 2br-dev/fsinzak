@@ -6,7 +6,7 @@
 {*<div id="first-product-in-cart">*}
 {*    {moduleinsert name="\Affiliate\Controller\Block\Selectaffiliate" indexTempalte="%affiliate%/blocks/selectaffiliate/select_affiliate_first_product"}*}
 {*</div>*}
-<div class="col xl9 l8 m12" id="products">
+<div class="col xl9 l9 m12" id="products">
     <h2>
         <a href="#cat-nav" class="hide-l-up sidenav-trigger mobile-filter-trigger">
             <i class="mdi mdi-tune"></i><span>Фильтры</span>

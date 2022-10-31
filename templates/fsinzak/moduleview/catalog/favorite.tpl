@@ -17,7 +17,9 @@
                 {if $view_as == 'blocks'}
                     <div class="row rs-products-list flex">
                         {foreach $list as $product}
-                            {include file="%catalog%/one_product.tpl"}
+                            <div class="col s6 m3 l2">
+                                {include file="%catalog%/one_product.tpl"}
+                            </div>
                         {/foreach}
                     </div>
                 {else}
