@@ -9,7 +9,9 @@
                             <div class="data-wrapper">
                                 <div class="date">{$item.dateof|dateformat:"%d %v %Y"}</div>
                                 <div class="title">{$item.title}</div>
-                                <div class="intro">{$item->getPreview(200)}</div>
+                                {if $smarty.foreach.news.index == 0}
+                                    <div class="intro">{$item->getPreview(200)}</div>
+                                {/if}
                             </div>
                             <div class="link-wrapper">
                                 <a href="{$item->getUrl()}" class="btn">Подробнее</a>
@@ -51,11 +53,11 @@
         </div>
 {*        <div class="col s12 center-align"><a href="{$router->getUrl('article-front-previewlist', [category => $category->getUrlId()])}" class="btn">Все новости</a></div>*}
 
-        <div class="col s12 center-align news-filters">
-            <a href="/text-news/?type=all" class="btn large">Все новости</a>
-            <a href="/text-news/?type=affiliate" class="btn large">Новости ФСИН</a>
-            <a href="/text-news/?type=service" class="btn large">Новости сервиса</a>
-        </div>
+{*        <div class="col s12 center-align news-filters">*}
+{*            <a href="/text-news/?type=all" class="btn large">Все новости</a>*}
+{*            <a href="/text-news/?type=affiliate" class="btn large">Новости ФСИН</a>*}
+{*            <a href="/text-news/?type=service" class="btn large">Новости сервиса</a>*}
+{*        </div>*}
     </div>
 {else}
     <div class="h1 m-0 mb-4">{t}Новости{/t}</div>

@@ -1,11 +1,14 @@
 {* Отображает текущий филиал в шапке. Позволяет открыть диалоговое окно выбора филиала. *}
 {addjs file="%affiliate%/rscomponent/affiliate.js"}
 {$parent_affiliate = $current_affiliate->getParentAffiliate()}
+{$affiliate_limits = $current_affiliate->getAffiliateLimits()}
 <div class="geo hide-l-down">
-    <a class="restrictions modal-trigger" href="#restrictions">
-        <i class="mdi mdi-alert-remove-outline"></i>
-        <span>Внимание, ограничения!</span>
-    </a>
+    {if !empty($affiliate_limits)}
+        <a class="restrictions rs-in-dialog" href="{$router->getUrl("fsinzak-front-affiliate", ['Act' => 'getAffiliateLimitsModal','current_affiliate' => $current_affiliate['id']])}">
+            <i class="mdi mdi-alert-remove-outline"></i>
+            <span>Внимание, ограничения!</span>
+        </a>
+    {/if}
     <a class="rs-in-dialog"
        data-href="{$router->getUrl('affiliate-front-affiliates', ['referer' => $referrer])}"
        {if $current_affiliate.id}{$current_affiliate->getDebugAttributes()}{/if}
