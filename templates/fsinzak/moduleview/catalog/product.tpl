@@ -35,7 +35,7 @@
                         {$image_box = 866}
                         {$preview_image_box = 101}
                     {/if}
-                    <div class="product-image-wrapper">
+                    <div class="product-image-wrapper product-page-image">
                         {$images = $product->getImages()}
                         {if !$images}{$images=[$product->getImageStub()]}{/if}
                         <div class="image-wrapper">
@@ -116,138 +116,140 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        <div class="row">
-            {$tabs=[]}
-            {$properties = $product->fillProperty()}
+                    <div class="description-divider"></div>
+                    <div class="row">
+                        {$tabs=[]}
+                        {$properties = $product->fillProperty()}
 
-            {if $product.description} {$tabs["description"] = t('О товаре')} {/if}
-            {if $properties || ($product->checkPropExist() == 'true')} {$tabs["property"] = t('Характеристики')} {/if}
-{*            {if $THEME_SETTINGS.review_enabled}{$tabs["comments"] = t('Отзывы')}{/if}*}
-            {if $files = $product->getFiles()} {$tabs["files"] = t('Файлы')}   {/if}
-            {$act_tab = $tab}
-            {if !empty($tabs)}
-            <div class="tab-pills__wrap mb-lg-5 mb-4">
-                <ul class="nav nav-pills tab-pills tab-pills_product tabs" id="tabs">
-                    {foreach $tabs as $key => $tab_title}
-                        {if !$act_tab && $tab_title@first}{$act_tab = $key}{/if}
-                        <li class="nav-item tab">
-                            <a class="nav-link {if $key == $act_tab}active{/if}" data-tab-id="{$key}"
-                                {if !in_array($key, $catalog_config->tabs_on_new_page) || $key == $tab}
-                                    {if $tab && $tab != $key}
-                                        href="{$product->getUrl()}#tab-{$key}"
-                                    {else}
-                                        data-bs-toggle="pill" data-bs-target="#tab-{$key}"
-                                    {/if}
-                                {else}
-                                    href="{$router->getUrl('catalog-front-product', ['id' => $product._alias, 'tab' => $key])}#tab-{$key}"
-                                {/if}>
-                                {$tab_title}{if $key == 'comments'} <span class="label-count label-count_static label">{$product->getCommentsNum()}</span>{/if}
-                                      {if $key == 'files'}<span class="label-count label-count_static label">{count($files)}</span>{/if}
-                            </a>
-                        </li>
-                    {/foreach}
-                </ul>
-            </div>
-            {/if}
-            {if !empty($tabs)}
-                <div class="tab-content" id="pills-tabContent">
-                    {if $tabs.description && (!$tab || $act_tab == 'property')}
-                        <div class="tab-pane fade {if $act_tab == 'description'}show active{/if}" id="tab-description">
-                            {hook name="catalog-product:description" title="{t}Карточка товара:описание{/t}"}
-                            <article class="last-child-margin-remove">
-                                {$product.description}
-                            </article>
-                            {/hook}
-                        </div>
-                    {/if}
-                    {if $tabs.property && ((!in_array('property', $catalog_config->tabs_on_new_page) && !$tab) || $act_tab == 'property')}
-                        <div class="tab-pane fade {if $act_tab == 'property'}show active{/if}" id="tab-property">
-                            {hook name="catalog-product:properties" title="{t}Карточка товара:характеристики{/t}"}
-                                {if $offers_data.offers}
-                                    {foreach $offers_data.offers as $key => $offer}
-                                        {capture assign="offer_property"}{strip}
-                                            {foreach $offer.info as $property_title_value}
-                                                <li>
-                                                    <div class="row g-4">
-                                                        <div class="col-sm-7 col-6">{$property_title_value[0]}</div>
-                                                        <div class="col-sm-5 col-6 fw-bold">{$property_title_value[1]}</div>
-                                                    </div>
-                                                </li>
-                                            {/foreach}
-                                        {/strip}{/capture}
-                                        {if $offer_property}
-                                            <div class="rs-offer-property {if $offer.id != $offers_data.mainOfferId} d-none{/if}" data-offer="{$offer.id}">
-                                                <div class="fw-bold mb-md-4 mb-3 order-first">{t}Характеристики комплектации{/t}</div>
-                                                <ul class="product-chars mb-md-6 mb-5">
-                                                    {$offer_property}
-                                                </ul>
-                                            </div>
-                                        {/if}
+                        {if $product.description} {$tabs["description"] = t('О товаре')} {/if}
+                        {if $properties || ($product->checkPropExist() == 'true')} {$tabs["property"] = t('Характеристики')} {/if}
+                        {*            {if $THEME_SETTINGS.review_enabled}{$tabs["comments"] = t('Отзывы')}{/if}*}
+                        {if $files = $product->getFiles()} {$tabs["files"] = t('Файлы')}   {/if}
+                        {$act_tab = $tab}
+                        {if !empty($tabs)}
+                            <div class="tab-pills__wrap mb-lg-5 mb-4">
+                                <ul class="nav nav-pills tab-pills tab-pills_product tabs" id="tabs">
+                                    {foreach $tabs as $key => $tab_title}
+                                        {if !$act_tab && $tab_title@first}{$act_tab = $key}{/if}
+                                        <li class="nav-item tab">
+                                            <a class="nav-link {if $key == $act_tab}active{/if}" data-tab-id="{$key}"
+                                                    {if !in_array($key, $catalog_config->tabs_on_new_page) || $key == $tab}
+                                                {if $tab && $tab != $key}
+                                                    href="{$product->getUrl()}#tab-{$key}"
+                                                {else}
+                                                    data-bs-toggle="pill" data-bs-target="#tab-{$key}"
+                                                {/if}
+                                                    {else}
+                                                href="{$router->getUrl('catalog-front-product', ['id' => $product._alias, 'tab' => $key])}#tab-{$key}"
+                                                    {/if}>
+                                                {$tab_title}{if $key == 'comments'} <span class="label-count label-count_static label">{$product->getCommentsNum()}</span>{/if}
+                                                {if $key == 'files'}<span class="label-count label-count_static label">{count($files)}</span>{/if}
+                                            </a>
+                                        </li>
                                     {/foreach}
+                                </ul>
+                            </div>
+                        {/if}
+                        {if !empty($tabs)}
+                            <div class="tab-content" id="pills-tabContent">
+                                {if $tabs.description && (!$tab || $act_tab == 'property')}
+                                    <div class="tab-pane fade {if $act_tab == 'description'}show active{/if}" id="tab-description">
+                                        {hook name="catalog-product:description" title="{t}Карточка товара:описание{/t}"}
+                                            <article class="last-child-margin-remove">
+                                                {$product.description}
+                                            </article>
+                                        {/hook}
+                                    </div>
                                 {/if}
-
-                                {foreach $product->fillProperty() as $data}
-                                    {if !$data.group.hidden && !empty($data.group)}
-                                        <div class="fw-bold mb-md-4 mb-3">{$data.group.title|default:"Общие"}</div>
-                                        <ul class="product-chars mb-md-6 mb-5">
-                                            {foreach $data.properties as $property}
-                                                {$property_value = $property->textView()}
-                                                {if !$property.hidden && !empty($property_value)}
-                                                    <li>
-                                                        <div class="row g-4">
-                                                            <div class="col-sm-7 col-6">{$property.title} {if $property.unit}({$property.unit}){/if}
-                                                                {if $property.description}
-                                                                    <a class="btn-popover"
-                                                                       data-bs-toggle="popover"
-                                                                       tabindex="0"
-                                                                       data-bs-content="{$property.description}"> ? </a>
-                                                                {/if}
+                                {if $tabs.property && ((!in_array('property', $catalog_config->tabs_on_new_page) && !$tab) || $act_tab == 'property')}
+                                    <div class="tab-pane fade {if $act_tab == 'property'}show active{/if}" id="tab-property">
+                                        {hook name="catalog-product:properties" title="{t}Карточка товара:характеристики{/t}"}
+                                        {if $offers_data.offers}
+                                            {foreach $offers_data.offers as $key => $offer}
+                                                {capture assign="offer_property"}{strip}
+                                                    {foreach $offer.info as $property_title_value}
+                                                        <li>
+                                                            <div class="row g-4">
+                                                                <div class="col-sm-7 col-6">{$property_title_value[0]}</div>
+                                                                <div class="col-sm-5 col-6 fw-bold">{$property_title_value[1]}</div>
                                                             </div>
-                                                            <div class="col-sm-5 col-6 fw-bold">{$property_value}</div>
-                                                        </div>
-                                                    </li>
+                                                        </li>
+                                                    {/foreach}
+                                                {/strip}{/capture}
+                                                {if $offer_property}
+                                                    <div class="rs-offer-property {if $offer.id != $offers_data.mainOfferId} d-none{/if}" data-offer="{$offer.id}">
+                                                        <div class="fw-bold mb-md-4 mb-3 order-first">{t}Характеристики комплектации{/t}</div>
+                                                        <ul class="product-chars mb-md-6 mb-5">
+                                                            {$offer_property}
+                                                        </ul>
+                                                    </div>
                                                 {/if}
                                             {/foreach}
-                                        </ul>
-                                    {/if}
-                                {/foreach}
-                            {/hook}
-                        </div>
-                    {/if}
-{*                    {if $tabs.comments && ((!in_array('comments', $catalog_config->tabs_on_new_page) && !$tab) || $act_tab == 'comments')}*}
-{*                        <div class="tab-pane fade {if $act_tab == 'comments'}show active{/if}" id="tab-comments">*}
-{*                        <div class="row g-4">*}
-{*                            {hook name="catalog-product:comments" title="{t}Карточка товара:комментарии{/t}"}*}
-{*                                {moduleinsert name="Comments\Controller\Block\Comments" type="\Catalog\Model\CommentType\Product"}*}
-{*                            {/hook}*}
-{*                        </div>*}
-{*                    </div>*}
-{*                    {/if}*}
-                    {if $tabs.files && ((!in_array('files', $catalog_config->tabs_on_new_page) && !$tab) || $act_tab == 'files')}
-                        <div class="tab-pane fade {if $act_tab == 'files'}show active{/if}" id="tab-files">
-                            {hook name="catalog-product:files" title="{t}Карточка товара:файлы{/t}"}
-                                <div class="last-child-margin-remove">
-                                {foreach $files as $file}
-                                    <div class="product-doc mb-2">
-                                        <div>
-                                            {$file.name} ({$file.size|format_filesize})
-                                            {if $file.description}
-                                                <div class="mt-2 text-gray">{$file.description}</div>
+                                        {/if}
+
+                                        {foreach $product->fillProperty() as $data}
+                                            {if !$data.group.hidden && !empty($data.group)}
+                                                <div class="fw-bold mb-md-4 mb-3">{$data.group.title|default:"Общие"}</div>
+                                                <ul class="product-chars mb-md-6 mb-5">
+                                                    {foreach $data.properties as $property}
+                                                        {$property_value = $property->textView()}
+                                                        {if !$property.hidden && !empty($property_value)}
+                                                            <li>
+                                                                <div class="row g-4">
+                                                                    <div class="col-sm-7 col-6">{$property.title} {if $property.unit}({$property.unit}){/if}
+                                                                        {if $property.description}
+                                                                            <a class="btn-popover"
+                                                                               data-bs-toggle="popover"
+                                                                               tabindex="0"
+                                                                               data-bs-content="{$property.description}"> ? </a>
+                                                                        {/if}
+                                                                    </div>
+                                                                    <div class="col-sm-5 col-6 fw-bold">{$property_value}</div>
+                                                                </div>
+                                                            </li>
+                                                        {/if}
+                                                    {/foreach}
+                                                </ul>
                                             {/if}
-                                        </div>
-                                        <a class="product-doc__link" href="{$file->getUrl()}">
-                                            <img src="{$THEME_IMG}/icons/download.svg" width="40" height="40" alt="{t}Скачать{/t} {$file.name}">
-                                        </a>
+                                        {/foreach}
+                                        {/hook}
                                     </div>
-                                {/foreach}
+                                {/if}
+                                {*                    {if $tabs.comments && ((!in_array('comments', $catalog_config->tabs_on_new_page) && !$tab) || $act_tab == 'comments')}*}
+                                {*                        <div class="tab-pane fade {if $act_tab == 'comments'}show active{/if}" id="tab-comments">*}
+                                {*                        <div class="row g-4">*}
+                                {*                            {hook name="catalog-product:comments" title="{t}Карточка товара:комментарии{/t}"}*}
+                                {*                                {moduleinsert name="Comments\Controller\Block\Comments" type="\Catalog\Model\CommentType\Product"}*}
+                                {*                            {/hook}*}
+                                {*                        </div>*}
+                                {*                    </div>*}
+                                {*                    {/if}*}
+                                {if $tabs.files && ((!in_array('files', $catalog_config->tabs_on_new_page) && !$tab) || $act_tab == 'files')}
+                                    <div class="tab-pane fade {if $act_tab == 'files'}show active{/if}" id="tab-files">
+                                        {hook name="catalog-product:files" title="{t}Карточка товара:файлы{/t}"}
+                                            <div class="last-child-margin-remove">
+                                                {foreach $files as $file}
+                                                    <div class="product-doc mb-2">
+                                                        <div>
+                                                            {$file.name} ({$file.size|format_filesize})
+                                                            {if $file.description}
+                                                                <div class="mt-2 text-gray">{$file.description}</div>
+                                                            {/if}
+                                                        </div>
+                                                        <a class="product-doc__link" href="{$file->getUrl()}">
+                                                            <img src="{$THEME_IMG}/icons/download.svg" width="40" height="40" alt="{t}Скачать{/t} {$file.name}">
+                                                        </a>
+                                                    </div>
+                                                {/foreach}
+                                            </div>
+                                        {/hook}
+                                    </div>
+                                {/if}
                             </div>
-                            {/hook}
-                        </div>
-                    {/if}
-                    {/if}
-        </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
     </section>
 </main>
 

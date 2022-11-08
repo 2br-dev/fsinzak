@@ -77,7 +77,7 @@
         {moduleinsert name="\Catalog\Controller\Block\Searchline" indexTemplate="%catalog%/blocks/searchline/searchform_sidenav.tpl"}
     </li>
     <li><a href="/">Главная</a></li>
-    <li><a href="">Правила</a></li>
+    <li><a href="/pravila/">Правила</a></li>
     <li>
         <ul class="collapsible" id="catalog">
             <li>
@@ -90,9 +90,11 @@
             </li>
         </ul>
     </li>
-    <li><a href="/delivery.html">Доставка и оплата</a></li>
-    <li><a href="/news.html">Новости</a></li>
-    <li><a href="/contacts.html">Контакты</a></li>
+    <li><a href="/dostavka-i-oplata/">Доставка и оплата</a></li>
+    <li><a href="/text-news/">Новости</a></li>
+    <li><a href="/about/">О Нас</a></li>
+    <li><a href="/reviews/">Отзывы</a></li>
+    <li><a href="/contacts/">Контакты</a></li>
 </ul>
 {*{if $current_recipient && !$can_order_do}*}
 {*    <p>Для выбранного получателя превышен лимит заказов за период</p>*}
@@ -121,7 +123,8 @@
     <li><a class="active sidenav-trigger" href="#mobile"><i class="icon" id="catalog"></i><span class="title">Каталог</span></a></li>
     <li>{moduleinsert name="\Shop\Controller\Block\Cart" indexTemplate="%shop%/blocks/cart/cart_bottomtoolbar.tpl"}</li>
     <li>{moduleinsert name="\Catalog\Controller\Block\Favorite" indexTemplate="%catalog%/blocks/favorite/favorite_bottomtoolbar.tpl"}</li>
-    <li><div class="icon-wrapper">
+    <li id="profile-menu">
+        <div class="icon-wrapper">
             {moduleinsert name="\Users\Controller\Block\AuthBlock" indexTemplate="%users%/blocks/authblock/authblock_bottomtoolbar.tpl"}
         </div>
     </li>

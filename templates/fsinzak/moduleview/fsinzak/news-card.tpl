@@ -4,7 +4,7 @@
             {if $item.image}
                 <a class="lazy h hoverable" href="{$item->getUrl()}" data-src="{$item.__image->getUrl(1040, 620, 'xy')}"></a>
             {else}
-                <a class="lazy h hoverable" href="{$item->getUrl()}" data-src="{$THEME_IMG}/decorative/news-empty.svg"></a>
+                <a class="lazy h hoverable" href="{$item->getUrl()}" data-src="{$THEME_IMG}/news-entry.svg"></a>
             {/if}
         </div>
         <div class="news-entry-content">

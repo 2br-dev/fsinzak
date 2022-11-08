@@ -13,7 +13,7 @@
                             href="{$dir->getUrl()}"
                             class="lazy"
                             {if $dir.image}
-                                data-src="{$dir.__image->getUrl(24, 24, 'cxy')}"
+                                data-src="{$dir.__image->getUrl(100, 100, 'cxy')}"
                             {else}
                                 data-src="{$THEME_IMG}/icons/availability.svg"
                             {/if}

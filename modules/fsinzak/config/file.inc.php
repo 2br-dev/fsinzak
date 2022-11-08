@@ -176,7 +176,7 @@ class File extends ConfigObject
         $periodicity = $this->getPeriodicity();
         $recipient = new \Fsinzak\Model\Orm\Recipients($_COOKIE['fsinzak-selected-recipient']);
         $order_count = $recipient->getRecipientCountOrderForPeriod();
-        if($periodicity['value'] > $order_count){
+        if(empty($periodicity) || ($periodicity['value'] > $order_count)){
             return true;
         }
         return false;

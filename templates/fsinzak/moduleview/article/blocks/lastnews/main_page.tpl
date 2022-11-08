@@ -9,7 +9,9 @@
                             <div class="data-wrapper">
                                 <div class="date">{$item.dateof|dateformat:"%d %v %Y"}</div>
                                 <div class="title">{$item.title}</div>
-                                <div class="intro">{$item->getPreview(200)}</div>
+                                {if $smarty.foreach.news.index == 0}
+                                    <div class="intro">{$item->getPreview(200)}</div>
+                                {/if}
                             </div>
                             <div class="link-wrapper">
                                 <a href="{$item->getUrl()}" class="btn">Подробнее</a>

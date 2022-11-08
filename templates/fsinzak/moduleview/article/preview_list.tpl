@@ -15,9 +15,9 @@
             <div class="row flex">
                 <div class="col s12">
                     <div class="segmented-control">
-                        <a href="/news.html" class="segment">Все<span class="hide-m-down"> новости</span></a>
-                        <a href="/news.html" class="segment active"><span class="hide-m-down">Новости </span>ФСИН</a>
-                        <a href="/news.html" class="segment"><span class="hide-m-down">Новости </span>сервис<span class="hide-m-down">а</span></a>
+                        <a href="/text-news/" class="segment {if $selected_type_news == ''}active{/if}">Все<span class="hide-m-down"> новости</span></a>
+                        <a href="/text-news/?type=affiliate" class="segment {if $selected_type_news == 'affiliate'}active{/if}"><span class="hide-m-down">Новости </span>ФСИН</a>
+                        <a href="/text-news/?type=service" class="segment {if $selected_type_news == 'service'}active{/if}"><span class="hide-m-down">Новости </span>сервис<span class="hide-m-down">а</span></a>
                     </div>
                 </div>
             </div>

@@ -148,15 +148,20 @@ class Handlers extends HandlerAbstract
         /**
          * @var \Article\Model\Api $article_api
          */
-        $article_api->setFilter('affiliate_id', $current_affiliate['id'])->setFilter(['|affiliate_id:is' => 'NULL', '|affiliate_id' => 0]);
-        $all_news = $article_api->setFilter('affiliate_id', $current_affiliate['id'])->setFilter(['|affiliate_id:is' => 'NULL', '|affiliate_id' => 0])->getList();
-        $affiliate_news = $article_api->setFilter('affiliate_id', $current_affiliate['id'])->getList();
-        $service_news = $article_api->setFilter('type_news', 'service')->getList();
+//        $article_api->setFilter('affiliate_id', $current_affiliate['id'])->setFilter(['|affiliate_id:is' => 'NULL', '|affiliate_id' => 0]);
         $selected_type_news = $controller->url->request('type', TYPE_STRING, '');
+        if($selected_type_news == ''){
+            $article_api->setFilter('affiliate_id', $current_affiliate['id'])->setFilter(['|affiliate_id:is' => 'NULL', '|affiliate_id' => 0]);
+        }
+        if($selected_type_news == 'service'){
+            $article_api->setFilter('type_news', 'service');
+        }
+        if($selected_type_news == 'affiliate'){
+            $article_api->setFilter('affiliate_id', $current_affiliate['id']);
+        }
+
+
         $controller->view->assign([
-            'all_news' => $all_news,
-            'affiliate_news' => $affiliate_news,
-            'service_news' => $service_news,
             'selected_type_news' => $selected_type_news
         ]);
         return $params;

@@ -59,38 +59,38 @@
 {*            <a href="/text-news/?type=service" class="btn large">Новости сервиса</a>*}
 {*        </div>*}
     </div>
-{else}
-    <div class="h1 m-0 mb-4">{t}Новости{/t}</div>
+{*{else}*}
+{*    <div class="h1 m-0 mb-4">{t}Новости{/t}</div>*}
 
-    {capture assign = "skeleton_html"}
-        <div class="row row-cols-lg-4 row-cols-sm-2 g-lg-4 g-3">
-            <div>
-                <img class="w-100" width="359" height="315" src="{$THEME_IMG}/skeleton/skeleton-news.svg" alt="">
-            </div>
-            <div>
-                <img class="w-100" width="359" height="315" src="{$THEME_IMG}/skeleton/skeleton-news.svg" alt="">
-            </div>
-            <div class="d-lg-block d-none">
-                <img class="w-100" width="359" height="315" src="{$THEME_IMG}/skeleton/skeleton-news.svg" alt="">
-            </div>
-            <div class="d-lg-block d-none">
-                <img class="w-100" width="359" height="315" src="{$THEME_IMG}/skeleton/skeleton-news.svg" alt="">
-            </div>
-        </div>
-    {/capture}
+{*    {capture assign = "skeleton_html"}*}
+{*        <div class="row row-cols-lg-4 row-cols-sm-2 g-lg-4 g-3">*}
+{*            <div>*}
+{*                <img class="w-100" width="359" height="315" src="{$THEME_IMG}/skeleton/skeleton-news.svg" alt="">*}
+{*            </div>*}
+{*            <div>*}
+{*                <img class="w-100" width="359" height="315" src="{$THEME_IMG}/skeleton/skeleton-news.svg" alt="">*}
+{*            </div>*}
+{*            <div class="d-lg-block d-none">*}
+{*                <img class="w-100" width="359" height="315" src="{$THEME_IMG}/skeleton/skeleton-news.svg" alt="">*}
+{*            </div>*}
+{*            <div class="d-lg-block d-none">*}
+{*                <img class="w-100" width="359" height="315" src="{$THEME_IMG}/skeleton/skeleton-news.svg" alt="">*}
+{*            </div>*}
+{*        </div>*}
+{*    {/capture}*}
 
-    {include "%THEME%/helper/usertemplate/include/block_stub.tpl"
-    name = "{t}Новости{/t}"
-    skeleton = $skeleton_html
-    do = [
-        [
-            'title' => "{t}Добавить категорию с новостями{/t}",
-            'href' => "{adminUrl do=false mod_controller="article-ctrl"}"
-        ],
-        [
-            'title' => "{t}Настроить блок{/t}",
-            'href' => {$this_controller->getSettingUrl()},
-            'class' => 'crud-add'
-        ]
-    ]}
+{*    {include "%THEME%/helper/usertemplate/include/block_stub.tpl"*}
+{*    name = "{t}Новости{/t}"*}
+{*    skeleton = $skeleton_html*}
+{*    do = [*}
+{*        [*}
+{*            'title' => "{t}Добавить категорию с новостями{/t}",*}
+{*            'href' => "{adminUrl do=false mod_controller="article-ctrl"}"*}
+{*        ],*}
+{*        [*}
+{*            'title' => "{t}Настроить блок{/t}",*}
+{*            'href' => {$this_controller->getSettingUrl()},*}
+{*            'class' => 'crud-add'*}
+{*        ]*}
+{*    ]}*}
 {/if}

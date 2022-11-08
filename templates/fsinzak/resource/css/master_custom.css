@@ -709,5 +709,13 @@ main.profile #available-returns td button.counter{
     text-align: right;
     width: 40px;
 }
-
+.bottom-toolbar li:hover > div ul {
+    opacity: 1;
+    pointer-events: all;
+    transform: none;
+}
+.icon-wrapper span.indicator.indicator-ul-bottomtoolbar {
+    top: 5px;
+    right: 10px;
+}
 
